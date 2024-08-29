@@ -1,0 +1,181 @@
+[
+  {
+    "objectID": "CONTRIBUTING.html",
+    "href": "CONTRIBUTING.html",
+    "title": "How to contribute",
+    "section": "",
+    "text": "This project uses nbdev for development. Before beginning, make sure that nbdev and a jupyter-compatible client such as jupyterlab or nbclassic are installed. To make changes, update the notebooks in the nbs folder, not the .py files directly. Then, run nbdev_export. For more details, have a look at the nbdev tutorial.\n\n\nBefore anything else, please install the git hooks that run automatic scripts during each commit and merge to strip the notebooks of superfluous metadata (and avoid merge conflicts). After cloning the repository, run the following command inside it:\nnbdev_install_hooks\nThis is a one-off command that you only have to run when you’re first setting up the repo locally.\nYou will also want to set up a prep alias in ~/.zshrc or other shell startup file:\n# nbdev alias to clean Jupyter notebooks before committing\nalias prep='nbdev_export && nbdev_clean && nbdev_trust'\nRun prep before each commit.\n\n\n\n\nEnsure the bug was not already reported by searching on GitHub under Issues.\nIf you’re unable to find an open issue addressing the problem, open a new one. Be sure to include a title and clear description, as much relevant information as possible, and a code sample or an executable test case demonstrating the expected behavior that is not occurring.\nBe sure to add the complete error messages.\n\n\n\n\nOpen a new GitHub pull request with the patch.\nEnsure that your PR includes a test that fails without your patch, and pass with it.\nEnsure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.\n\n\n\n\n\n\nKeep each PR focused. While it’s more convenient, do not combine several unrelated fixes together. Create as many branches as needed to keep each PR focused.\nDo not mix style changes/fixes with “functional” changes. It’s very difficult to review such PRs and will most likely get rejected.\nDo not add/remove vertical whitespace. Preserve the original style of the file you edit as much as you can.\nDo not turn an already-submitted PR into your development playground. If after you submit a PR, you discover that more work is needed: close the PR, do the required work, and then submit a new PR. Otherwise each of your commits requires attention from maintainers of the project.\nIf, however, you submit a PR and receive a request for changes, you should proceed with commits inside that PR, so that the maintainer can see the incremental fixes and won’t need to review the whole PR again. In the exception case where you realize it’ll take many many commits to complete the requests, then it’s probably best to close the PR, do the work, and then submit it again. Use common sense where you’d choose one way over another.\n\n\n\n\n\nDocs are automatically created from the notebooks in the nbs folder."
+  },
+  {
+    "objectID": "CONTRIBUTING.html#how-to-get-started",
+    "href": "CONTRIBUTING.html#how-to-get-started",
+    "title": "How to contribute",
+    "section": "",
+    "text": "Before anything else, please install the git hooks that run automatic scripts during each commit and merge to strip the notebooks of superfluous metadata (and avoid merge conflicts). After cloning the repository, run the following command inside it:\nnbdev_install_hooks\nThis is a one-off command that you only have to run when you’re first setting up the repo locally.\nYou will also want to set up a prep alias in ~/.zshrc or other shell startup file:\n# nbdev alias to clean Jupyter notebooks before committing\nalias prep='nbdev_export && nbdev_clean && nbdev_trust'\nRun prep before each commit."
+  },
+  {
+    "objectID": "CONTRIBUTING.html#did-you-find-a-bug",
+    "href": "CONTRIBUTING.html#did-you-find-a-bug",
+    "title": "How to contribute",
+    "section": "",
+    "text": "Ensure the bug was not already reported by searching on GitHub under Issues.\nIf you’re unable to find an open issue addressing the problem, open a new one. Be sure to include a title and clear description, as much relevant information as possible, and a code sample or an executable test case demonstrating the expected behavior that is not occurring.\nBe sure to add the complete error messages.\n\n\n\n\nOpen a new GitHub pull request with the patch.\nEnsure that your PR includes a test that fails without your patch, and pass with it.\nEnsure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable."
+  },
+  {
+    "objectID": "CONTRIBUTING.html#pr-submission-guidelines",
+    "href": "CONTRIBUTING.html#pr-submission-guidelines",
+    "title": "How to contribute",
+    "section": "",
+    "text": "Keep each PR focused. While it’s more convenient, do not combine several unrelated fixes together. Create as many branches as needed to keep each PR focused.\nDo not mix style changes/fixes with “functional” changes. It’s very difficult to review such PRs and will most likely get rejected.\nDo not add/remove vertical whitespace. Preserve the original style of the file you edit as much as you can.\nDo not turn an already-submitted PR into your development playground. If after you submit a PR, you discover that more work is needed: close the PR, do the required work, and then submit a new PR. Otherwise each of your commits requires attention from maintainers of the project.\nIf, however, you submit a PR and receive a request for changes, you should proceed with commits inside that PR, so that the maintainer can see the incremental fixes and won’t need to review the whole PR again. In the exception case where you realize it’ll take many many commits to complete the requests, then it’s probably best to close the PR, do the work, and then submit it again. Use common sense where you’d choose one way over another."
+  },
+  {
+    "objectID": "CONTRIBUTING.html#do-you-want-to-contribute-to-the-documentation",
+    "href": "CONTRIBUTING.html#do-you-want-to-contribute-to-the-documentation",
+    "title": "How to contribute",
+    "section": "",
+    "text": "Docs are automatically created from the notebooks in the nbs folder."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "fewsats",
+    "section": "",
+    "text": "L402 enables internet-native payments using the HTTP status code 402 Payment Required. It’s built on the Lightning Network, a layer on top of Bitcoin, making it extremely fast. But there’s a catch: not many people have Bitcoin to spend.\nThat’s where Hub comes in. It lets you use dollars to buy L402 links, keeping the advantages of L402 without needing cryptocurrency.\nThis library helps your AI agents leverage Hub to access paywalled content programmatically. No crypto knowledge required.",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "index.html#whats-this-all-about",
+    "href": "index.html#whats-this-all-about",
+    "title": "fewsats",
+    "section": "",
+    "text": "L402 enables internet-native payments using the HTTP status code 402 Payment Required. It’s built on the Lightning Network, a layer on top of Bitcoin, making it extremely fast. But there’s a catch: not many people have Bitcoin to spend.\nThat’s where Hub comes in. It lets you use dollars to buy L402 links, keeping the advantages of L402 without needing cryptocurrency.\nThis library helps your AI agents leverage Hub to access paywalled content programmatically. No crypto knowledge required.",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "fewsats",
+    "section": "Install",
+    "text": "Install\npip install fewsats",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "fewsats",
+    "section": "How to use",
+    "text": "How to use\nBefore using the library, you need to sign up at https://paywithhub.com. Verify your email, and then generate an API key.\nFirst, import the Fewsats class:\n\nfrom fewsats import Fewsats\n\nInitialize the Fewsats client:\n\nclient = Fewsats(api_key=\"nJ2ro5V9x69JDEhEGyjnzfg6kTkk4LQjukIbfDmuOec\",\n                 base_url=\"http://localhost:8000\")\n# Leave base_url blank to use the default production URL\n# You can also set the HUB_API_TOKEN environment variable instead of passing the api_key directly",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "index.html#get-payment-methods",
+    "href": "index.html#get-payment-methods",
+    "title": "fewsats",
+    "section": "Get Payment Methods",
+    "text": "Get Payment Methods\nYou can retrieve the user’s payment methods using the get_payment_methods method:\n\npayment_methods = client.get_payment_methods()\npayment_methods\n\n[{'id': 1,\n  'last4': '4242',\n  'brand': 'visa',\n  'exp_month': 12,\n  'exp_year': 2034,\n  'is_default': True}]\n\n\nNote: The default payment method is always used when making purchases.",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "index.html#preview-a-purchase",
+    "href": "index.html#preview-a-purchase",
+    "title": "fewsats",
+    "section": "Preview a purchase",
+    "text": "Preview a purchase\nYou can preview a purchase using the preview_purchase method:\n\nl402_url = \"https://api.fewsats.com/v0/storage/download/de8d4c19-5a88-47fc-afa1-e514b1cdc9e8\"\npreview = client.preview_purchase(l402_url)\npreview\n\n{'invoice': {'description': 'LN Nodes by Median Fee',\n  'amount_usd': 99,\n  'amount_btc': 1686,\n  'macaroon': 'AgELZmV3c2F0cy5jb20CQgAAXTNbwmnvNDOZX9MinU0glsObHI02zniMY1EBsvQCKDEDNlwDmu8HNIZuHE6U1rVDNLWk8CBlqtewn8NAfr360wACLGZpbGVfaWQ9ZGU4ZDRjMTktNWE4OC00N2ZjLWFmYTEtZTUxNGIxY2RjOWU4AAIfZXhwaXJlc19hdD0yMDI1LTA4LTI0VDE4OjQ3OjE2WgAABiAtmy8gDmcF9dL930VqQItQILckZ5xtdfSmYpQWgcPuRg==',\n  'invoice': 'lnbc16860n1pndps35pp5t5e4hsnfau6r8x2l6v3f6nfqjmpek8ydxm883rrr2yqm9aqz9qcsdpyf38zqnn0v3jhxgrz0ysy6etyd9skugzxv4jscqzzsxqyz5vqsp5gn24te60qayyzqcxq6fyp58ukvtl69jqyujsmrfd2kxe2dwxwfeq9qxpqysgq36lfzryhz97jdhhzg05xlq05p30u36g6lr0p2ch7unu79dmg2w7kdeza4h8e8md7y3w2zxk862xu9ztue69f2mrnyrmlq95685py6rsqc3awvr'},\n 'transaction': {'current_balance': 1999,\n  'balance_to_apply': 99,\n  'amount_to_charge': 0,\n  'final_balance': 1900},\n 'already_purchased': False,\n 'purchase': None}",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "index.html#make-a-purchase",
+    "href": "index.html#make-a-purchase",
+    "title": "fewsats",
+    "section": "Make a purchase",
+    "text": "Make a purchase\nTo make a purchase, use the purchase method:\n\npurchase = client.purchase(l402_url)\npurchase\n\n{'id': 3,\n 'created_at': '2024-08-28T14:47:26.904Z',\n 'l402_url': 'https://api.fewsats.com/v0/storage/download/2e54ac29-5945-4b5f-93db-998a535a5a49',\n 'macaroon': 'AgELZmV3c2F0cy5jb20CQgAADkZv2VQjgOG+iwoFB5CXg5yInkncy5xEGQZKrkphETmU9+MjeNM4bsj1j5l5KKvildd2pHdtrW+ChXQOQ/fZzgACLGZpbGVfaWQ9MmU1NGFjMjktNTk0NS00YjVmLTkzZGItOTk4YTUzNWE1YTQ5AAIfZXhwaXJlc19hdD0yMDI1LTA4LTIzVDE0OjQ3OjI1WgAABiBIoB5sUXEXijxuyL2cjn0WIgLpOCtt8UcGaGn9N/8n0Q==',\n 'invoice': 'lnbc170n1pnv7wrapp5perxlk25ywqwr05tpgzs0yyhswwg38jfmn9ec3qeqe92ujnpzyusdq024f5kgzgda6hxegcqzzsxqyz5vqsp54ceypjapjxntxrtnhkyfrds7m5u9stn8x6gkmf5dx6z56ksy6l3q9qxpqysgqnkxdtwqxhkvrav3d3wv83yxn45yrdywxu2mnyh4p7ecncuqsv4gn0xrfl6w57hd9lnc5eghdf536dqy5gf2uuly04nrtdjcwvezkt6cqtttnzj',\n 'preimage': 'b184b87e7a4f802bf41cd26c82d9d883b9cf7bb86f8dcfc4f394634ff711f628',\n 'amount': 1,\n 'currency': 'usd',\n 'description': 'USK House'}",
+    "crumbs": [
+      "fewsats"
+    ]
+  },
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "Fewsats Client",
+    "section": "",
+    "text": "We’ll start by creating the base Fewsats class. This class will handle authentication and provide the foundation for our API interactions.\n\nsource\n\n\n\n Fewsats (api_key:str=None,\n          base_url:str='https://hub-5n97k.ondigitalocean.app/')\n\nInitialize self. See help(type(self)) for accurate signature.\n\nclient = Fewsats(api_key=\"nJ2ro5V9x69JDEhEGyjnzfg6kTkk4LQjukIbfDmuOec\",\n                 base_url=\"http://localhost:8000\")\n\nNow that we have our base client, let’s add methods to interact with the API. We’ll use the @patch decorator to add these methods to our Fewsats class.",
+    "crumbs": [
+      "Fewsats Client"
+    ]
+  },
+  {
+    "objectID": "core.html#the-fewsats-client",
+    "href": "core.html#the-fewsats-client",
+    "title": "Fewsats Client",
+    "section": "",
+    "text": "We’ll start by creating the base Fewsats class. This class will handle authentication and provide the foundation for our API interactions.\n\nsource\n\n\n\n Fewsats (api_key:str=None,\n          base_url:str='https://hub-5n97k.ondigitalocean.app/')\n\nInitialize self. See help(type(self)) for accurate signature.\n\nclient = Fewsats(api_key=\"nJ2ro5V9x69JDEhEGyjnzfg6kTkk4LQjukIbfDmuOec\",\n                 base_url=\"http://localhost:8000\")\n\nNow that we have our base client, let’s add methods to interact with the API. We’ll use the @patch decorator to add these methods to our Fewsats class.",
+    "crumbs": [
+      "Fewsats Client"
+    ]
+  },
+  {
+    "objectID": "core.html#payment-methods",
+    "href": "core.html#payment-methods",
+    "title": "Fewsats Client",
+    "section": "Payment Methods",
+    "text": "Payment Methods\nFirst, let’s add a method to retrieve the user’s payment methods. This will be useful for checking which card will be used for purchases.\n\nsource\n\nFewsats.get_payment_methods\n\n Fewsats.get_payment_methods ()\n\n*Retrieve the user’s payment methods.\nReturns: List[Dict[str, Any]]: A list of payment methods associated with the user’s account.*\n\npayment_methods = client.get_payment_methods()\npayment_methods\n\n[{'id': 1,\n  'last4': '4242',\n  'brand': 'visa',\n  'exp_month': 12,\n  'exp_year': 2034,\n  'is_default': True}]",
+    "crumbs": [
+      "Fewsats Client"
+    ]
+  },
+  {
+    "objectID": "core.html#preview-purchase",
+    "href": "core.html#preview-purchase",
+    "title": "Fewsats Client",
+    "section": "Preview Purchase",
+    "text": "Preview Purchase\nNow, let’s add a method to preview a purchase. This method will use the default payment method if a charge is needed.\n\nsource\n\nFewsats.preview_purchase\n\n Fewsats.preview_purchase (l402_url:str)\n\n*Preview a purchase for the given L402 URL.\nThis method will use the default payment method if a charge is needed.\nArgs: l402_url (str): The L402 URL for the purchase.\nReturns: Dict[str, Any]: The preview details of the purchase.*\n\n# Let's test our preview_purchase method\nl402_url = \"https://api.fewsats.com/v0/storage/download/2e54ac29-5945-4b5f-93db-998a535a5a49\"\npreview = client.preview_purchase(l402_url)\npreview\n\n{'invoice': {'description': 'USK House',\n  'amount_usd': 1,\n  'amount_btc': 17,\n  'macaroon': 'AgELZmV3c2F0cy5jb20CQgAAixN/Z/Yq2hOpxABgPnQ2Pp6GZeYbVOF01xAz/yL31noCFMS09vuHHdQXNTkos6dnucW9CK3dDGQqUFpAfCMDIAACLGZpbGVfaWQ9MmU1NGFjMjktNTk0NS00YjVmLTkzZGItOTk4YTUzNWE1YTQ5AAIfZXhwaXJlc19hdD0yMDI1LTA4LTI0VDEwOjQwOjI5WgAABiCw1A4Ve05yJrCKb2IDKWSK8gAHl9JqdbzavDLhr4yMCQ==',\n  'invoice': 'lnbc170n1pndq5qapp53vfh7elk9tdp82wyqpsruapk860gve0xrd2wzaxhzqel7ghh6eaqdq024f5kgzgda6hxegcqzzsxqyz5vqsp5z67p2wxkyxm6p594d0dwcx55nn7kk3ruc0qhna7zvtl364g0fsys9qxpqysgq75nauzznx07hxp5sc0kkrwfcgy57qvxrut3wf0mwhmrqh7lgyhcxymq7vm5agfm4tkjmhnn409rnzschmz7hcw5vhwjnxlxm7u680xcq2qp8wl'},\n 'transaction': {'current_balance': 1999,\n  'balance_to_apply': 1,\n  'amount_to_charge': 0,\n  'final_balance': 1998},\n 'already_purchased': True,\n 'purchase': {'id': 3,\n  'user_id': 1,\n  'l402_url': 'https://api.fewsats.com/v0/storage/download/2e54ac29-5945-4b5f-93db-998a535a5a49',\n  'currency': 'usd',\n  'amount': 1,\n  'macaroon': 'AgELZmV3c2F0cy5jb20CQgAADkZv2VQjgOG+iwoFB5CXg5yInkncy5xEGQZKrkphETmU9+MjeNM4bsj1j5l5KKvildd2pHdtrW+ChXQOQ/fZzgACLGZpbGVfaWQ9MmU1NGFjMjktNTk0NS00YjVmLTkzZGItOTk4YTUzNWE1YTQ5AAIfZXhwaXJlc19hdD0yMDI1LTA4LTIzVDE0OjQ3OjI1WgAABiBIoB5sUXEXijxuyL2cjn0WIgLpOCtt8UcGaGn9N/8n0Q==',\n  'invoice': 'lnbc170n1pnv7wrapp5perxlk25ywqwr05tpgzs0yyhswwg38jfmn9ec3qeqe92ujnpzyusdq024f5kgzgda6hxegcqzzsxqyz5vqsp54ceypjapjxntxrtnhkyfrds7m5u9stn8x6gkmf5dx6z56ksy6l3q9qxpqysgqnkxdtwqxhkvrav3d3wv83yxn45yrdywxu2mnyh4p7ecncuqsv4gn0xrfl6w57hd9lnc5eghdf536dqy5gf2uuly04nrtdjcwvezkt6cqtttnzj',\n  'description': 'USK House',\n  'preimage': 'b184b87e7a4f802bf41cd26c82d9d883b9cf7bb86f8dcfc4f394634ff711f628',\n  'valid': True,\n  'created_at': '2024-08-28T14:47:26.904Z'}}",
+    "crumbs": [
+      "Fewsats Client"
+    ]
+  },
+  {
+    "objectID": "core.html#make-a-purchase",
+    "href": "core.html#make-a-purchase",
+    "title": "Fewsats Client",
+    "section": "Make a Purchase",
+    "text": "Make a Purchase\nFinally, let’s add a method to make a purchase. Like the preview method, this will use the default payment method if a charge is needed.\n\nsource\n\nFewsats.purchase\n\n Fewsats.purchase (l402_url:str)\n\n*Make a purchase for the given L402 URL.\nThis method will use the default payment method if a charge is needed.\nArgs: l402_url (str): The L402 URL for the purchase.\nReturns: Dict[str, Any]: The details of the completed purchase.*\n\n# Let's test our purchase method\npurchase_result = client.purchase(l402_url)\nprint(f\"Purchase result: {purchase_result}\")\n\nPurchase result: {'id': 3, 'created_at': '2024-08-28T14:47:26.904Z', 'l402_url': 'https://api.fewsats.com/v0/storage/download/2e54ac29-5945-4b5f-93db-998a535a5a49', 'macaroon': 'AgELZmV3c2F0cy5jb20CQgAADkZv2VQjgOG+iwoFB5CXg5yInkncy5xEGQZKrkphETmU9+MjeNM4bsj1j5l5KKvildd2pHdtrW+ChXQOQ/fZzgACLGZpbGVfaWQ9MmU1NGFjMjktNTk0NS00YjVmLTkzZGItOTk4YTUzNWE1YTQ5AAIfZXhwaXJlc19hdD0yMDI1LTA4LTIzVDE0OjQ3OjI1WgAABiBIoB5sUXEXijxuyL2cjn0WIgLpOCtt8UcGaGn9N/8n0Q==', 'invoice': 'lnbc170n1pnv7wrapp5perxlk25ywqwr05tpgzs0yyhswwg38jfmn9ec3qeqe92ujnpzyusdq024f5kgzgda6hxegcqzzsxqyz5vqsp54ceypjapjxntxrtnhkyfrds7m5u9stn8x6gkmf5dx6z56ksy6l3q9qxpqysgqnkxdtwqxhkvrav3d3wv83yxn45yrdywxu2mnyh4p7ecncuqsv4gn0xrfl6w57hd9lnc5eghdf536dqy5gf2uuly04nrtdjcwvezkt6cqtttnzj', 'preimage': 'b184b87e7a4f802bf41cd26c82d9d883b9cf7bb86f8dcfc4f394634ff711f628', 'amount': 1, 'currency': 'usd', 'description': 'USK House'}",
+    "crumbs": [
+      "Fewsats Client"
+    ]
+  },
+  {
+    "objectID": "core.html#conclusion",
+    "href": "core.html#conclusion",
+    "title": "Fewsats Client",
+    "section": "Conclusion",
+    "text": "Conclusion\nWe’ve now built a simple, intuitive Fewsats client that can: 1. Retrieve the user’s payment methods 2. Preview a purchase 3. Make a purchase\nBoth the preview and purchase methods automatically use the default payment method if a charge is needed. This client provides a straightforward way to interact with the Fewsats API, making it easy for developers to integrate Fewsats functionality into their applications.",
+    "crumbs": [
+      "Fewsats Client"
+    ]
+  },
+  {
+    "objectID": "CHANGELOG.html",
+    "href": "CHANGELOG.html",
+    "title": "Release notes",
+    "section": "",
+    "text": "Init release of v0.0.1, supporting the Hub API preview purchase and purchase."
+  },
+  {
+    "objectID": "CHANGELOG.html#section",
+    "href": "CHANGELOG.html#section",
+    "title": "Release notes",
+    "section": "",
+    "text": "Init release of v0.0.1, supporting the Hub API preview purchase and purchase."
+  }
+]
