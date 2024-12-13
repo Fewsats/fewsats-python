@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "fewsats"
+  site-url: "https://Fewsats.github.io/fewsats-python"
+  description: "Python SDK for Fewsats"
+  repo-branch: main
+  repo-url: "https://github.com/Fewsats/fewsats-python"
