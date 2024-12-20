@@ -25,7 +25,7 @@ class Client:
         self._httpx_client.headers.update({"Authorization": f"Token {self.api_key}"})
 
 
-# %% ../nbs/00_core.ipynb 8
+# %% ../nbs/00_core.ipynb 9
 @patch
 def _request(self: Client, 
              method: str, # The HTTP method to use
@@ -35,7 +35,7 @@ def _request(self: Client,
     url = f"{self.base_url}/{path}"
     return  self._httpx_client.request(method, url, **kwargs)
 
-# %% ../nbs/00_core.ipynb 10
+# %% ../nbs/00_core.ipynb 12
 @patch
 def me(self: Client):
     "Retrieve the user's info."
@@ -43,7 +43,7 @@ def me(self: Client):
     r.raise_for_status()
     return r.json()
 
-# %% ../nbs/00_core.ipynb 12
+# %% ../nbs/00_core.ipynb 15
 @patch
 def balance(self: Client):
     "Retrieve the balance of the user's wallet."
@@ -51,15 +51,15 @@ def balance(self: Client):
     r.raise_for_status()
     return r.json()
 
-# %% ../nbs/00_core.ipynb 15
+# %% ../nbs/00_core.ipynb 18
 @patch
-def get_payment_methods(self: Client) -> List[Dict[str, Any]]:
+def payment_methods(self: Client) -> List[Dict[str, Any]]:
     "Retrieve the user's payment methods, raises an exception for error status codes."
     r = self._request("GET", "v0/stripe/payment-methods")
     r.raise_for_status()
     return r.json()
 
-# %% ../nbs/00_core.ipynb 19
+# %% ../nbs/00_core.ipynb 22
 @patch
 def simulate_payment(self: Client,
                     amount: str): # The amount in USD cents
@@ -68,7 +68,7 @@ def simulate_payment(self: Client,
     return self._request("POST", "v0/l402/preview/purchase/amount", json={"amount_usd": amount})
 
 
-# %% ../nbs/00_core.ipynb 23
+# %% ../nbs/00_core.ipynb 26
 @patch
 def _pay_ln(self: Client,
          ln_invoice: str, # The Lightning Network invoice to pay
@@ -78,12 +78,32 @@ def _pay_ln(self: Client,
      p = {"invoice": ln_invoice, "description": description, "l402_url": l402_url, "macaroon":""}
      return self._request("POST", "v0/l402/purchases/direct", json=p)  
 
-# %% ../nbs/00_core.ipynb 26
+# %% ../nbs/00_core.ipynb 30
 @patch
-def pay(self: Client,
-        purl: str, # payment endpoint URL
-        oid: str, # offer ID
-        pct: str): # payment context token
-    "Pay an invoice, raises an exception for error status codes."
-    p = {"payment_request_url": purl, "offer_id": oid, "payment_context_token": pct}
-    return self._request("POST", "v0/l402/purchases/from-offer", json=p)  
+def pay(self:Client,
+        purl:str, # payment endpoint URL
+        pct:str, # payment context token
+        amount:int, # amount in cents
+        balance:int, # balance
+        currency:str, # currency
+        description:str, # description
+        offer_id:str, # offer id
+        payment_methods:list[str], # payment methods
+        title:str, # offer title
+        type:str # offer type
+) -> dict: # payment status response
+    "POST payment request. Returns payment status response"
+    return self._request("POST", "v0/l402/purchases/from-offer", json={
+        "payment_request_url": purl,
+        "payment_context_token": pct,
+        "offer": {
+            "offer_id": offer_id,
+            "title": title,
+            "description": description,
+            "amount": amount,
+            "type": type,
+            "currency": currency,
+            "balance": balance,
+            "payment_methods": payment_methods,
+        },
+    })

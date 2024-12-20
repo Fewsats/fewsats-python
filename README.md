@@ -35,12 +35,6 @@ Install latest from the GitHub
 $ pip install git+https://github.com/Fewsats/fewsats-python.git
 ```
 
-or from [conda](https://anaconda.org/Fewsats/fewsats-python)
-
-``` sh
-$ conda install -c Fewsats fewsats
-```
-
 or from [pypi](https://pypi.org/project/fewsats-python/)
 
 ``` sh
@@ -74,43 +68,118 @@ load_dotenv()
 
 ``` python
 fs = Client()
-fs.get_payment_methods()
+fs.payment_methods()
 ```
 
-    []
+    [{'id': 5,
+      'last4': '4242',
+      'brand': 'Visa',
+      'exp_month': 12,
+      'exp_year': 2034,
+      'is_default': True}]
 
 ``` python
 fs.balance()
 ```
 
-    [{'id': 15, 'balance': 0, 'currency': 'usd'}]
+    [{'id': 15, 'balance': 9998, 'currency': 'usd'}]
 
 `Client().balance()` returns how much balance you have in your wallet in
 cents.
 
 ``` python
 # Example offer from stock.l402.org
-oid = 'offer_c668e0c0'
-purl = 'https://stock.l402.org/l402/payment-request'
-pct='edb53dec-28f5-4cbb-924a-20e9003c20e1'
-
-r = fs.pay(purl, oid, pct)
-r, r.json()
+ofs = {
+   "offers":[
+      {
+         "amount":1,
+         "balance":1,
+         "currency":"USD",
+         "description":"Purchase 1 credit for API access",
+         "offer_id":"offer_c668e0c0",
+         "payment_methods":[
+            "lightning"
+         ],
+         "title":"1 Credit Package",
+         "type":"top-up"
+      },
+      {
+         "amount":100,
+         "balance":120,
+         "currency":"USD",
+         "description":"Purchase 120 credits for API access",
+         "offer_id":"offer_97bf23f7",
+         "payment_methods":[
+            "lightning",
+            "coinbase_commerce"
+         ],
+         "title":"120 Credits Package",
+         "type":"top-up"
+      },
+      {
+         "amount":499,
+         "balance":750,
+         "currency":"USD",
+         "description":"Purchase 750 credits for API access",
+         "offer_id":"offer_a896b13c",
+         "payment_methods":[
+            "lightning",
+            "coinbase_commerce",
+            "credit_card"
+         ],
+         "title":"750 Credits Package",
+         "type":"top-up"
+      }
+   ],
+   "payment_context_token":"edb53dec-28f5-4cbb-924a-20e9003c20e1",
+   "payment_request_url":"https://stock.l402.org/l402/payment-request",
+   "terms_url":"https://link-to-terms.com",
+   "version":"0.2.1"
+}
 ```
 
-    (<Response [200 OK]>,
-     {'id': 172,
-      'created_at': '2024-12-18T19:03:47.036Z',
-      'l402_url': 'https://stock.l402.org/l402/payment-request',
-      'macaroon': '',
-      'invoice': 'lnbc90n1pnkx8yjpp507yt2v4pg9e6kgdrnme2986yl5r86qrlq6hcsal9gfvcl77hyh2qdq6xysyxun9v35hggzsv93kkct8v5cqzpgxqrzpnrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqz99gpz55yqqqqqqqqqqqqqq9qrzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqz99gpz55yqqqqqqqqqqqqqq9qsp5p5e32yem76y4xh6t5zznmlvdmqcrkhr9enynszzydde6zkr4ak7s9qxpqysgqganymxzr7nxxkw30q7xtrmdyec8lhrfd4ezgramqzztlas66p8qjpfrt8r5fs5qfadr4l8vxgjekfl4hhtahg9x62kpp06z4nek4kcspa93u76',
-      'preimage': '8bd1cdb2533b8e6348d401db906f381e8ec43b808deebb462b375ed8728b0bd4',
-      'amount': 0,
-      'currency': 'usd',
-      'description': '1 Credit Package'})
+``` python
+from claudette import Chat, models
+```
+
+``` python
+chat = Chat(models[1], sp='You are a helpful assistant that can pay offers.', tools=[fs.pay])
+pr = f"Could you pay the cheapest offer using lightning {ofs}?"
+r = chat.toolloop(pr, trace_func=print)
+r
+```
+
+    Message(id='msg_01NFdtyUuDPMMjKnqP2d1aug', content=[TextBlock(text='Certainly! I\'d be happy to help you pay for the cheapest offer using Lightning. Let\'s analyze the information you\'ve provided and proceed with the payment.\n\nThe cheapest offer from the given list is:\n\n- Amount: 1 cent (USD 0.01)\n- Balance: 1 credit\n- Currency: USD\n- Description: "Purchase 1 credit for API access"\n- Offer ID: offer_c668e0c0\n- Payment Method: Lightning\n- Title: "1 Credit Package"\n- Type: top-up\n\nNow, let\'s use the `pay` function to process this payment. I\'ll use the information you\'ve provided along with the details of the cheapest offer.', type='text'), ToolUseBlock(id='toolu_018nMWXuDMmqLBZVGsscAzAU', input={'purl': 'https://stock.l402.org/l402/payment-request', 'pct': 'edb53dec-28f5-4cbb-924a-20e9003c20e1', 'amount': 1, 'balance': 1, 'currency': 'USD', 'description': 'Purchase 1 credit for API access', 'offer_id': 'offer_c668e0c0', 'payment_methods': ['lightning'], 'title': '1 Credit Package', 'type': 'top-up'}, name='pay', type='tool_use')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='tool_use', stop_sequence=None, type='message', usage=In: 959; Out: 426; Cache create: 0; Cache read: 0; Total: 1385)
+    Message(id='msg_01Fqheb9pR4YfDVDdKuRLhbC', content=[TextBlock(text='Great! The payment request has been successfully submitted. The response status code 200 OK indicates that the transaction was processed successfully.\n\nTo summarize:\n1. You\'ve purchased the "1 Credit Package" for 1 cent (USD 0.01).\n2. This package provides you with 1 credit for API access.\n3. The payment was made using the Lightning network.\n\nIs there anything else you\'d like to know about this transaction or any other assistance you need?', type='text')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='end_turn', stop_sequence=None, type='message', usage=In: 1402; Out: 108; Cache create: 0; Cache read: 0; Total: 1510)
+
+Great! The payment request has been successfully submitted. The response
+status code 200 OK indicates that the transaction was processed
+successfully.
+
+To summarize: 1. You’ve purchased the “1 Credit Package” for 1 cent (USD
+0.01). 2. This package provides you with 1 credit for API access. 3. The
+payment was made using the Lightning network.
+
+Is there anything else you’d like to know about this transaction or any
+other assistance you need?
+
+<details>
+
+- id: `msg_01Fqheb9pR4YfDVDdKuRLhbC`
+- content:
+  `[{'text': 'Great! The payment request has been successfully submitted. The response status code 200 OK indicates that the transaction was processed successfully.\n\nTo summarize:\n1. You\'ve purchased the "1 Credit Package" for 1 cent (USD 0.01).\n2. This package provides you with 1 credit for API access.\n3. The payment was made using the Lightning network.\n\nIs there anything else you\'d like to know about this transaction or any other assistance you need?', 'type': 'text'}]`
+- model: `claude-3-5-sonnet-20240620`
+- role: `assistant`
+- stop_reason: `end_turn`
+- stop_sequence: `None`
+- type: `message`
+- usage:
+  `{'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 0, 'input_tokens': 1402, 'output_tokens': 108}`
+
+</details>
 
 ``` python
 fs.balance()
 ```
 
-    [{'id': 15, 'balance': 0, 'currency': 'usd'}]
+    [{'id': 15, 'balance': 9997, 'currency': 'usd'}]
