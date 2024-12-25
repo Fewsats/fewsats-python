@@ -10,6 +10,7 @@ from fastcore.utils import *
 import os
 import httpx
 from typing import Dict, Any, List
+from time import time, sleep
 
 # %% ../nbs/00_core.ipynb 6
 class Client:
@@ -68,21 +69,12 @@ def simulate_payment(self: Client,
     return self._request("POST", "v0/l402/preview/purchase/amount", json={"amount_usd": amount})
 
 
-# %% ../nbs/00_core.ipynb 26
-@patch
-def _pay_ln(self: Client,
-         ln_invoice: str, # The Lightning Network invoice to pay
-         description: str, # Short payment description
-         l402_url: str = ""): # L402 URL of the resource
-     "Pay an invoice, raises an exception for error status codes."
-     p = {"invoice": ln_invoice, "description": description, "l402_url": l402_url, "macaroon":""}
-     return self._request("POST", "v0/l402/purchases/direct", json=p)  
-
-# %% ../nbs/00_core.ipynb 30
+# %% ../nbs/00_core.ipynb 27
 @patch
 def pay(self:Client,
         purl:str, # payment endpoint URL
         pct:str, # payment context token
+        # offer fields
         amount:int, # amount in cents
         balance:int, # balance
         currency:str, # currency
@@ -90,12 +82,14 @@ def pay(self:Client,
         offer_id:str, # offer id
         payment_methods:list[str], # payment methods
         title:str, # offer title
-        type:str # offer type
+        type:str, # offer type
+        pm:str = '', # preferred payment method (optional)
 ) -> dict: # payment status response
     "POST payment request. Returns payment status response"
     return self._request("POST", "v0/l402/purchases/from-offer", json={
         "payment_request_url": purl,
         "payment_context_token": pct,
+        "payment_method": pm,
         "offer": {
             "offer_id": offer_id,
             "title": title,
@@ -107,3 +101,27 @@ def pay(self:Client,
             "payment_methods": payment_methods,
         },
     })
+
+# %% ../nbs/00_core.ipynb 34
+@patch
+def payment_info(self:Client,
+                  pid:str): # purchase id
+    "Retrieve the details of a payment."
+    return self._request("GET", f"v0/l402/purchases/{pid}")
+
+# %% ../nbs/00_core.ipynb 39
+@patch
+def wait_for_settlement(self:Client,
+                        pid:str, # purchase id
+                        max_interval:int=120, # maximum interval between checks in seconds
+                        max_wait:int=600): # maximum total wait time in seconds
+    "Wait for payment settlement with exponential backoff"
+    start,wait = time(),1
+    while time() - start < max_wait:
+        r = self.payment_info(pid).json()
+        status = r['status']
+        if status == 'success': return r
+        if status == 'failed': raise ValueError(f"Payment {pid} failed")
+        sleep(min(wait, max_interval))
+        wait *= 2
+    raise TimeoutError(f"Payment {pid} did not settle within {max_wait} seconds. Final status: {status}")
