@@ -37,39 +37,100 @@ def _request(self: Client,
     return  self._httpx_client.request(method, url, **kwargs)
 
 # %% ../nbs/00_core.ipynb 12
+def _process_response(r):
+    "Process response: raise for status and return json if possible"
+    r.raise_for_status()
+    try: return r.json()
+    except: return r
+
+# %% ../nbs/00_core.ipynb 14
 @patch
 def me(self: Client):
     "Retrieve the user's info."
     r = self._request("GET", "v0/users/me")
-    r.raise_for_status()
-    return r.json()
+    return _process_response(r)
 
-# %% ../nbs/00_core.ipynb 15
+# %% ../nbs/00_core.ipynb 17
 @patch
 def balance(self: Client):
     "Retrieve the balance of the user's wallet."
     r = self._request("GET", "v0/wallets")
-    r.raise_for_status()
-    return r.json()
+    return _process_response(r)
 
-# %% ../nbs/00_core.ipynb 18
+# %% ../nbs/00_core.ipynb 20
 @patch
 def payment_methods(self: Client) -> List[Dict[str, Any]]:
     "Retrieve the user's payment methods, raises an exception for error status codes."
     r = self._request("GET", "v0/stripe/payment-methods")
-    r.raise_for_status()
-    return r.json()
+    return _process_response(r)
 
-# %% ../nbs/00_core.ipynb 22
+# %% ../nbs/00_core.ipynb 24
 @patch
-def simulate_payment(self: Client,
+def _preview_payment(self: Client,
                     amount: str): # The amount in USD cents
     "Simulates a purchase, raises an exception for error status codes."
     assert amount.isdigit()
-    return self._request("POST", "v0/l402/preview/purchase/amount", json={"amount_usd": amount})
+    return _process_response(self._request("POST", "v0/l402/preview/purchase/amount", json={"amount_usd": amount}))
 
 
-# %% ../nbs/00_core.ipynb 27
+# %% ../nbs/00_core.ipynb 28
+@patch
+def _submit_payment(self:Client,
+        purl:str, # payment endpoint URL
+        pct:str, # payment context token
+        # offer fields
+        amount:int, # amount in cents
+        balance:int, # balance
+        currency:str, # currency
+        description:str, # description
+        offer_id:str, # offer id
+        payment_methods:list[str], # payment methods
+        title:str, # offer title
+        type:str, # offer type
+        pm:str = '', # preferred payment method (optional)
+) -> dict: # payment status response
+    "POST payment request. Returns payment status response"
+    return _process_response(self._request("POST", "v0/l402/purchases/from-offer", json={
+        "payment_request_url": purl,
+        "payment_context_token": pct,
+        "payment_method": pm,
+        "offer": {
+            "offer_id": offer_id,
+            "title": title,
+            "description": description,
+            "amount": amount,
+            "type": type,
+            "currency": currency,
+            "balance": balance,
+            "payment_methods": payment_methods,
+        },
+    }))
+
+# %% ../nbs/00_core.ipynb 35
+@patch
+def payment_info(self:Client,
+                  pid:str): # purchase id
+    "Retrieve the details of a payment."
+    return _process_response(self._request("GET", f"v0/l402/purchases/{pid}"))
+
+# %% ../nbs/00_core.ipynb 40
+@patch
+def _wait_for_settlement(self:Client,
+                        pid:str, # purchase id
+                        max_interval:int=120, # maximum interval between checks in seconds
+                        max_wait:int=600): # maximum total wait time in seconds
+    "Wait for payment settlement with exponential backoff"
+    start,wait = time(),1
+    while time() - start < max_wait:
+        r = self.payment_info(pid)
+        status = r['status']
+        if status == 'success': return r
+        if status == 'failed': raise ValueError(f"Payment {pid} failed")
+        sleep(min(wait, max_interval))
+        wait *= 2
+    raise TimeoutError(f"Payment {pid} did not settle within {max_wait} seconds. Final status: {status}")
+
+# %% ../nbs/00_core.ipynb 43
 @patch
 def pay(self:Client,
         purl:str, # payment endpoint URL
@@ -85,43 +146,19 @@ def pay(self:Client,
         type:str, # offer type
         pm:str = '', # preferred payment method (optional)
 ) -> dict: # payment status response
-    "POST payment request. Returns payment status response"
-    return self._request("POST", "v0/l402/purchases/from-offer", json={
-        "payment_request_url": purl,
-        "payment_context_token": pct,
-        "payment_method": pm,
-        "offer": {
-            "offer_id": offer_id,
-            "title": title,
-            "description": description,
-            "amount": amount,
-            "type": type,
-            "currency": currency,
-            "balance": balance,
-            "payment_methods": payment_methods,
-        },
-    })
+    "Pay for an offer and wait for settlement"
+    r = self._submit_payment(purl, pct, amount, balance, currency, description, offer_id, payment_methods, title, type, pm)
+    return self._wait_for_settlement(r['id'])
 
-# %% ../nbs/00_core.ipynb 34
-@patch
-def payment_info(self:Client,
-                  pid:str): # purchase id
-    "Retrieve the details of a payment."
-    return self._request("GET", f"v0/l402/purchases/{pid}")
 
-# %% ../nbs/00_core.ipynb 39
+# %% ../nbs/00_core.ipynb 46
 @patch
-def wait_for_settlement(self:Client,
-                        pid:str, # purchase id
-                        max_interval:int=120, # maximum interval between checks in seconds
-                        max_wait:int=600): # maximum total wait time in seconds
-    "Wait for payment settlement with exponential backoff"
-    start,wait = time(),1
-    while time() - start < max_wait:
-        r = self.payment_info(pid).json()
-        status = r['status']
-        if status == 'success': return r
-        if status == 'failed': raise ValueError(f"Payment {pid} failed")
-        sleep(min(wait, max_interval))
-        wait *= 2
-    raise TimeoutError(f"Payment {pid} did not settle within {max_wait} seconds. Final status: {status}")
+def as_tools(self:Client):
+    "Return list of available tools for AI agents"
+    return [
+        self.me,
+        self.balance,
+        self.payment_methods,
+        self.pay,
+        self.payment_info,
+    ]
