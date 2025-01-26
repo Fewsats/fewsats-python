@@ -153,6 +153,14 @@ def pay(self:Client,
 
 # %% ../nbs/00_core.ipynb 46
 @patch
+def create_offers(self:Client,
+                 offers:List[Dict[str,Any]], # List of offer objects following OfferCreateV0 schema
+) -> dict:
+    "Create offers for L402 payment server"
+    return _process_response(self._request("POST", "v0/l402/offers", json={"offers": offers}))
+
+# %% ../nbs/00_core.ipynb 49
+@patch
 def as_tools(self:Client):
     "Return list of available tools for AI agents"
     return [
