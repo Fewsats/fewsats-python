@@ -80,13 +80,13 @@ def _submit_payment(self:Client,
         pct:str, # payment context token
         # offer fields
         amount:int, # amount in cents
-        balance:int, # balance
         currency:str, # currency
         description:str, # description
         offer_id:str, # offer id
         payment_methods:list[str], # payment methods
         title:str, # offer title
         type:str, # offer type
+        balance:int = 0, # balance (optional)
         pm:str = '', # preferred payment method (optional)
 ) -> dict: # payment status response
     "POST payment request. Returns payment status response"
@@ -151,7 +151,19 @@ def pay(self:Client,
     return self._wait_for_settlement(r['id'])
 
 
-# %% ../nbs/00_core.ipynb 46
+# %% ../nbs/00_core.ipynb 45
+@patch
+def pay_lightning(self: Client, 
+                  invoice: str, # lightning invoice
+                  description: str = "" ): # description of the payment 
+    "Pay for a lightning invoice"
+    data = {
+        "invoice": invoice,
+        "description": description
+    }
+    return self._request("POST", "v0/l402/purchases/lightning", json=data)
+
+# %% ../nbs/00_core.ipynb 47
 @patch
 def create_offers(self:Client,
                  offers:List[Dict[str,Any]], # List of offer objects following OfferCreateV0 schema
@@ -159,7 +171,7 @@ def create_offers(self:Client,
     "Create offers for L402 payment server"
     return _process_response(self._request("POST", "v0/l402/offers", json={"offers": offers}))
 
-# %% ../nbs/00_core.ipynb 49
+# %% ../nbs/00_core.ipynb 50
 @patch
 def as_tools(self:Client):
     "Return list of available tools for AI agents"
