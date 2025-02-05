@@ -13,14 +13,7 @@ autonomous agents
 
 ## Install
 
-Install latest from the GitHub
-[repository](https://github.com/Fewsats/fewsats-python):
-
-``` sh
-$ pip install git+https://github.com/Fewsats/fewsats-python.git
-```
-
-or from [pypi](https://pypi.org/project/fewsats-python/)
+Install latest from [pypi](https://pypi.org/project/fewsats/)
 
 ``` sh
 $ pip install fewsats
@@ -29,7 +22,7 @@ $ pip install fewsats
 ## Getting Started
 
 The library provides a
-[`Client`](https://Fewsats.github.io/fewsats-python/core.html#client)
+[`Fewsats`](https://Fewsats.github.io/fewsats-python/core.html#fewsats)
 class to handle payments. You can use handle them manually or use the
 `as_tools()` method to create tools for autonomous agents.
 
@@ -38,41 +31,42 @@ from fewsats.core import *
 ```
 
 ``` python
-fs = Client()
-fs.payment_methods()
+fs = Fewsats()
+import os
+fs = Fewsats(api_key=os.getenv("FEWSATS_LOCAL_API_KEY"), base_url='http://localhost:8000')
+fs.payment_methods().json(), fs.balance().json(), fs.me().json()
 ```
 
-    [{'id': 5,
-      'last4': '4242',
-      'brand': 'Visa',
-      'exp_month': 12,
-      'exp_year': 2034,
-      'is_default': True}]
-
-``` python
-fs.balance()
-```
-
-    [{'id': 15, 'balance': 6471, 'currency': 'usd'}]
-
-``` python
-fs.me()
-```
-
-    {'name': 'Fewsats',
-     'last_name': 'Tester',
-     'email': 'test@fewsats.com',
-     'billing_info': None,
-     'id': 15,
-     'created_at': '2024-12-18T18:19:00.531Z'}
+    ([{'id': 1,
+       'last4': '4242',
+       'brand': 'visa',
+       'exp_month': 12,
+       'exp_year': 2034,
+       'is_default': False},
+      {'id': 4,
+       'last4': '4242',
+       'brand': 'Visa',
+       'exp_month': 12,
+       'exp_year': 2034,
+       'is_default': True}],
+     [{'id': 1, 'balance': 4468, 'currency': 'usd'}],
+     {'name': 'Pol',
+      'last_name': 'Alvarez Vecino',
+      'email': 'pol@fewsats.com',
+      'billing_info': None,
+      'id': 1,
+      'created_at': '2024-08-20T16:13:01.255Z'})
 
 The `pay` method uses the information returned by a [L402
 Protocol](https://github.com/l402-protocol/l402?tab=readme-ov-file#402-response-format)
-`402 Payment Required` response to submit a payment.
+`402 Payment Required` response to submit a payment. The L402 flow is
+handled by the backend. By default it will also choose the most
+convenient payment method, and assume you want to pay the first offer if
+multiple are available.
 
 ``` python
 # Example offer from stock.l402.org
-ofs = {
+l402_offer = {
    "offers":[
       {
          "amount":1,
@@ -95,22 +89,25 @@ ofs = {
 ```
 
 ``` python
-fs.pay(ofs['payment_request_url'], ofs['payment_context_token'], **ofs['offers'][0], pm='lightning')
+fs.pay_offer(l402_offer).json()
 ```
 
-    {'id': 240,
-     'created_at': '2024-12-26T10:24:03.486Z',
+    {'id': 118,
+     'created_at': '2025-02-06T13:57:59.586Z',
      'status': 'success',
-     'payment_request_url': 'https://stock.l402.org/l402/payment-request',
-     'payment_context_token': 'edb53dec-28f5-4cbb-924a-20e9003c20e1',
-     'invoice': 'lnbc100n1pnk6tkrpp5pkshrxfyvxuqphwxvax8dfaemhh287lnefrjr68cy494fppe5l0sdq6xysyxun9v35hggzsv93kkct8v5cqzpgxqrzpnrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqz99gpz55yqqqqqqqqqqqqqq9qrzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqz99gpz55yqqqqqqqqqqqqqq9qsp5070fsrfdknwpv2rfeju44k37uj362xcrzmey4se70kpzusy6c0pq9qxpqysgqcj990yc9lg5wje9u6myceakzff95q8qdwrslx69xh526y764dwlxt4v90qhwtmesukfaute6hkh9952t5f5gqjmrry3c6y0k7y2ltkcphyxfp2',
-     'preimage': '9de11f4b1bbaf9c18b8b28ee0747fdd64d124b7ee05090f4edc377e73393c2dc',
-     'amount': 1,
-     'currency': 'usd',
-     'payment_method': 'lightning',
-     'title': '1 Credit Package',
-     'description': 'Purchase 1 credit for API access',
-     'type': 'top-up'}
+     'payment_method': 'lightning'}
+
+Fewsats also supports paying for resources like a lightning invoice
+directly. For example:
+
+    fs.pay_lightning(invoice='lnbc100n1pn6fsyspp5g2f6hdqxc76wxccq2cd4wekck0nxfucfyvzkvy9fmxezlf3hcl6qdqqcqzpgxqyz5vqrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqz99gpz55yqqqqqqqqqqqqqq9qrzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqz99gpz55yqqqqqqqqqqqqqq9qsp5yzvs9czquyf8mjgwf465k0a7g4vh7jqv2cpza3lkygnllxnzk2wq9qxpqysgqnkmhmw05q6qc8urah004jtnkuztpazgg49m3g2wfamexr0m0ayrhla2ephnsm0xan3pweqc3hexeqx2mkfr8d3afwx6rds2r2znf4vgq7new3k',
+                      amount=1, currency='USD', description='Purchase 1 cent for API access')
+    <Response [200 OK]>
+
+The lightning invoice already contains a payment amount, but the method
+requires you to specify the amount you are expecting to pay in cents.
+This is done for accounting purposes and convenience, but the amount
+paid will be the sats in the invoice.
 
 ### AI Agent Integration
 
@@ -126,7 +123,10 @@ from claudette import Chat, models
 ``` python
 import os
 # os.environ['ANTHROPIC_LOG'] = 'debug'
+model = models[1]; model
 ```
+
+    'claude-3-5-sonnet-20240620'
 
 To print every HTTP request and response in full, uncomment the above
 line.
@@ -135,17 +135,17 @@ line.
 fs.balance()
 ```
 
-    [{'id': 15, 'balance': 6470, 'currency': 'usd'}]
+    [{'id': 15, 'balance': 5963, 'currency': 'usd'}]
 
 ``` python
-chat = Chat(models[1], sp='You are a helpful assistant that can pay offers.', tools=fs.as_tools())
-pr = f"Could you pay the cheapest offer using lightning {ofs}?"
+chat = Chat(model, sp='You are a helpful assistant that can pay offers.', tools=fs.as_tools())
+pr = f"Could you pay the cheapest offer using lightning {l402_offer}?"
 r = chat.toolloop(pr, trace_func=print)
 r
 ```
 
-    Message(id='msg_01SmWra463n6Q5wivTQS41B9', content=[TextBlock(text="Certainly! I can help you pay for the cheapest offer using Lightning. Based on the information you've provided, there's only one offer available, so we'll proceed with that one. Let's use the `pay` function to complete this transaction.\n\nFirst, let's organize the information we have:\n\n1. There's one offer for 1 credit at $0.01 (1 cent).\n2. The payment method is Lightning.\n3. We have a payment context token and a payment request URL.\n\nNow, let's call the `pay` function with the required parameters:", type='text'), ToolUseBlock(id='toolu_016nRMYdemRYBEuVq8JkWPe4', input={'purl': 'https://stock.l402.org/l402/payment-request', 'pct': 'edb53dec-28f5-4cbb-924a-20e9003c20e1', 'amount': 1, 'balance': 1, 'currency': 'USD', 'description': 'Purchase 1 credit for API access', 'offer_id': 'offer_c668e0c0', 'payment_methods': ['lightning'], 'title': '1 Credit Package', 'type': 'top-up'}, name='pay', type='tool_use')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='tool_use', stop_sequence=None, type='message', usage=In: 1002; Out: 395; Cache create: 0; Cache read: 0; Total: 1397)
-    Message(id='msg_011KopqDeH4CNLt8bKTLyGQD', content=[TextBlock(text="Great news! The payment has been successfully processed. Here's a summary of the transaction:\n\n1. Payment Status: Success\n2. Amount Paid: 1 cent (USD)\n3. Payment Method: Lightning\n4. Title: 1 Credit Package\n5. Description: Purchase 1 credit for API access\n6. Type: Top-up\n7. Transaction ID: 241\n8. Created At: 2024-12-26T10:24:13.845Z\n\nThe payment has been completed successfully, and you should now have 1 credit for API access added to your account. Is there anything else you would like to know about this transaction or any other assistance you need?", type='text')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='end_turn', stop_sequence=None, type='message', usage=In: 1942; Out: 155; Cache create: 0; Cache read: 0; Total: 2097)
+    Message(id='msg_01P2WhNQy4r7pTdqeLhv25uo', content=[TextBlock(text="Certainly! I can help you pay for the cheapest offer using Lightning. Based on the information you've provided, there's only one offer available, so we'll proceed with that one. Let's use the `pay` function to complete this transaction.\n\nFirst, let's organize the information we have:\n\n1. There's one offer for 1 credit at $0.01 (1 cent).\n2. The payment method is Lightning.\n3. We have a payment context token and a payment request URL.\n\nNow, let's call the `pay` function with the required parameters:", type='text'), ToolUseBlock(id='toolu_01KqP7nL9J48keGPJoPS2yGf', input={'purl': 'https://stock.l402.org/l402/payment-request', 'pct': 'edb53dec-28f5-4cbb-924a-20e9003c20e1', 'amount': 1, 'balance': 1, 'currency': 'USD', 'description': 'Purchase 1 credit for API access', 'offer_id': 'offer_c668e0c0', 'payment_methods': ['lightning'], 'title': '1 Credit Package', 'type': 'top-up'}, name='pay', type='tool_use')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='tool_use', stop_sequence=None, type='message', usage=In: 1002; Out: 395; Cache create: 0; Cache read: 0; Total: 1397)
+    Message(id='msg_01Tm57TAVcqN4Gh1dV7NdR4b', content=[TextBlock(text="Great news! The payment has been successfully processed. Here's a summary of the transaction:\n\n1. Payment Status: Success\n2. Amount Paid: 1 cent (USD)\n3. Payment Method: Lightning\n4. Title: 1 Credit Package\n5. Description: Purchase 1 credit for API access\n6. Type: Top-up\n7. Transaction ID: 253\n8. Created At: 2024-12-26T15:21:23.413Z\n\nThe payment has been completed successfully using the Lightning network. You should now have 1 credit added to your API access. Is there anything else you'd like to know about this transaction or any other assistance you need?", type='text')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='end_turn', stop_sequence=None, type='message', usage=In: 1952; Out: 156; Cache create: 0; Cache read: 0; Total: 2108)
 
 Great news! The payment has been successfully processed. Here’s a
 summary of the transaction:
@@ -156,26 +156,26 @@ summary of the transaction:
 4.  Title: 1 Credit Package
 5.  Description: Purchase 1 credit for API access
 6.  Type: Top-up
-7.  Transaction ID: 241
-8.  Created At: 2024-12-26T10:24:13.845Z
+7.  Transaction ID: 253
+8.  Created At: 2024-12-26T15:21:23.413Z
 
-The payment has been completed successfully, and you should now have 1
-credit for API access added to your account. Is there anything else you
-would like to know about this transaction or any other assistance you
-need?
+The payment has been completed successfully using the Lightning network.
+You should now have 1 credit added to your API access. Is there anything
+else you’d like to know about this transaction or any other assistance
+you need?
 
 <details>
 
-- id: `msg_011KopqDeH4CNLt8bKTLyGQD`
+- id: `msg_01Tm57TAVcqN4Gh1dV7NdR4b`
 - content:
-  `[{'text': "Great news! The payment has been successfully processed. Here's a summary of the transaction:\n\n1. Payment Status: Success\n2. Amount Paid: 1 cent (USD)\n3. Payment Method: Lightning\n4. Title: 1 Credit Package\n5. Description: Purchase 1 credit for API access\n6. Type: Top-up\n7. Transaction ID: 241\n8. Created At: 2024-12-26T10:24:13.845Z\n\nThe payment has been completed successfully, and you should now have 1 credit for API access added to your account. Is there anything else you would like to know about this transaction or any other assistance you need?", 'type': 'text'}]`
+  `[{'text': "Great news! The payment has been successfully processed. Here's a summary of the transaction:\n\n1. Payment Status: Success\n2. Amount Paid: 1 cent (USD)\n3. Payment Method: Lightning\n4. Title: 1 Credit Package\n5. Description: Purchase 1 credit for API access\n6. Type: Top-up\n7. Transaction ID: 253\n8. Created At: 2024-12-26T15:21:23.413Z\n\nThe payment has been completed successfully using the Lightning network. You should now have 1 credit added to your API access. Is there anything else you'd like to know about this transaction or any other assistance you need?", 'type': 'text'}]`
 - model: `claude-3-5-sonnet-20240620`
 - role: `assistant`
 - stop_reason: `end_turn`
 - stop_sequence: `None`
 - type: `message`
 - usage:
-  `{'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 0, 'input_tokens': 1942, 'output_tokens': 155}`
+  `{'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 0, 'input_tokens': 1952, 'output_tokens': 156}`
 
 </details>
 
@@ -183,4 +183,4 @@ need?
 fs.balance()
 ```
 
-    [{'id': 15, 'balance': 6469, 'currency': 'usd'}]
+    [{'id': 15, 'balance': 5962, 'currency': 'usd'}]
