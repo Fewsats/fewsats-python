@@ -104,6 +104,22 @@ def set_webhook(self:Fewsats,
 
 # %% ../nbs/00_core.ipynb 38
 @patch
+def pay_lightning(self: Fewsats, 
+                  invoice: str, # lightning invoice
+                  amount: int, # amount in cents
+                  currency: str = "USD", # currency
+                  description: str = "" ): # description of the payment 
+    "Pay for a lightning invoice"
+    data = {
+        "invoice": invoice,
+        "amount": amount,
+        "currency": currency,
+        "description": description
+    }
+    return self._request("POST", "v0/l402/purchases/lightning", json=data)
+
+# %% ../nbs/00_core.ipynb 42
+@patch
 def pay_offer(self:Fewsats,
         l402_offer: Dict, # a dictionary containing the response of an L402 endpoint
         payment_method:str = '', # preferred payment method (optional)
@@ -119,30 +135,14 @@ def pay_offer(self:Fewsats,
     data = {"payment_method": payment_method, **l402_offer} if payment_method else l402_offer
     return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
-# %% ../nbs/00_core.ipynb 40
-@patch
-def pay_lightning(self: Fewsats, 
-                  invoice: str, # lightning invoice
-                  amount: int, # amount in cents
-                  currency: str = "USD", # currency
-                  description: str = "" ): # description of the payment 
-    "Pay for a lightning invoice"
-    data = {
-        "invoice": invoice,
-        "amount": amount,
-        "currency": currency,
-        "description": description
-    }
-    return self._request("POST", "v0/l402/purchases/lightning", json=data)
-
-# %% ../nbs/00_core.ipynb 45
+# %% ../nbs/00_core.ipynb 46
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/purchases/{pid}")
 
-# %% ../nbs/00_core.ipynb 48
+# %% ../nbs/00_core.ipynb 49
 @patch
 def wait_for_settlement(self:Fewsats,
                         pid:str, # purchase id
@@ -160,7 +160,7 @@ def wait_for_settlement(self:Fewsats,
         wait *= 2
     raise TimeoutError(f"Payment {pid} did not settle within {max_wait} seconds. Final status: {status}")
 
-# %% ../nbs/00_core.ipynb 51
+# %% ../nbs/00_core.ipynb 52
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"
