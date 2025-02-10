@@ -78,6 +78,32 @@ def create_offers(self:Fewsats,
 
 # %% ../nbs/00_core.ipynb 30
 @patch
+def get_payment_details(self:Fewsats,
+                       payment_request_url:str,
+                       offer_id:str,
+                       payment_method:str,
+                       payment_context_token:str,
+                       ) -> dict:
+    data = {"offer_id": offer_id, "payment_method": payment_method, "payment_context_token": payment_context_token}
+    return httpx.post(payment_request_url, json=data)
+
+
+# %% ../nbs/00_core.ipynb 33
+@patch
+def get_payment_status(self:Fewsats,
+                       payment_context_token:str,
+                       ) -> dict:
+    return self._request("GET", f"v0/l402/payment-status?payment_context_token={payment_context_token}")
+
+# %% ../nbs/00_core.ipynb 35
+@patch
+def set_webhook(self:Fewsats,
+                       webhook_url:str,
+                       ) -> dict:
+    return self._request("POST", f"v0/users/webhook/set", json={"webhook_url": webhook_url})
+
+# %% ../nbs/00_core.ipynb 38
+@patch
 def pay_offer(self:Fewsats,
         l402_offer: Dict, # a dictionary containing the response of an L402 endpoint
         payment_method:str = '', # preferred payment method (optional)
@@ -93,7 +119,7 @@ def pay_offer(self:Fewsats,
     data = {"payment_method": payment_method, **l402_offer} if payment_method else l402_offer
     return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
-# %% ../nbs/00_core.ipynb 32
+# %% ../nbs/00_core.ipynb 40
 @patch
 def pay_lightning(self: Fewsats, 
                   invoice: str, # lightning invoice
@@ -109,14 +135,14 @@ def pay_lightning(self: Fewsats,
     }
     return self._request("POST", "v0/l402/purchases/lightning", json=data)
 
-# %% ../nbs/00_core.ipynb 37
+# %% ../nbs/00_core.ipynb 45
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/purchases/{pid}")
 
-# %% ../nbs/00_core.ipynb 40
+# %% ../nbs/00_core.ipynb 48
 @patch
 def wait_for_settlement(self:Fewsats,
                         pid:str, # purchase id
@@ -134,7 +160,7 @@ def wait_for_settlement(self:Fewsats,
         wait *= 2
     raise TimeoutError(f"Payment {pid} did not settle within {max_wait} seconds. Final status: {status}")
 
-# %% ../nbs/00_core.ipynb 43
+# %% ../nbs/00_core.ipynb 51
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"

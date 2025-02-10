@@ -26,6 +26,10 @@ The library provides a
 class to handle payments. You can use handle them manually or use the
 `as_tools()` method to create tools for autonomous agents.
 
+### Making Payments
+
+Obtain information about your account and perform payments:
+
 ``` python
 from fewsats.core import *
 ```
@@ -49,13 +53,14 @@ fs.payment_methods().json(), fs.balance().json(), fs.me().json()
        'exp_month': 12,
        'exp_year': 2034,
        'is_default': True}],
-     [{'id': 1, 'balance': 4468, 'currency': 'usd'}],
+     [{'id': 1, 'balance': 4464, 'currency': 'usd'}],
      {'name': 'Pol',
       'last_name': 'Alvarez Vecino',
       'email': 'pol@fewsats.com',
       'billing_info': None,
       'id': 1,
-      'created_at': '2024-08-20T16:13:01.255Z'})
+      'created_at': '2024-08-20T16:13:01.255Z',
+      'webhook_url': 'https://example.com/webhook'})
 
 The `pay` method uses the information returned by a [L402
 Protocol](https://github.com/l402-protocol/l402?tab=readme-ov-file#402-response-format)
@@ -92,8 +97,8 @@ l402_offer = {
 fs.pay_offer(l402_offer).json()
 ```
 
-    {'id': 118,
-     'created_at': '2025-02-06T13:57:59.586Z',
+    {'id': 121,
+     'created_at': '2025-02-10T11:04:48.083Z',
      'status': 'success',
      'payment_method': 'lightning'}
 
@@ -108,6 +113,67 @@ The lightning invoice already contains a payment amount, but the method
 requires you to specify the amount you are expecting to pay in cents.
 This is done for accounting purposes and convenience, but the amount
 paid will be the sats in the invoice.
+
+### Getting Paid
+
+Fewsats also provides methods for receiving payments. You can create
+offers for receiving payments as follows.
+
+``` python
+# Create offers for receiving payments
+offers_data = [{
+   "offer_id": "offer_example",
+   "amount": 1,
+   "currency": "USD",
+   "description": "Receive payment for your service",
+   "title": "1 Credit Package",
+   "payment_methods": ["lightning", "stripe"]
+}]
+r = fs.create_offers(offers_data)
+offers = r.json()
+offers
+```
+
+    {'offers': [{'offer_id': 'offer_example',
+       'amount': 1,
+       'currency': 'USD',
+       'description': 'Receive payment for your service',
+       'title': '1 Credit Package',
+       'payment_methods': ['lightning', 'stripe'],
+       'type': 'one-off'}],
+     'payment_context_token': 'a175fd73-cb68-4a22-8685-b236eff2f1a0',
+     'payment_request_url': 'http://localhost:8000/v0/l402/payment-request',
+     'version': '0.2.2'}
+
+You can check if an offer has been paid using the payment context token
+as follows.
+
+``` python
+fs.get_payment_status(payment_context_token=offers["payment_context_token"]).json()
+```
+
+    {'payment_context_token': 'a175fd73-cb68-4a22-8685-b236eff2f1a0',
+     'status': 'pending',
+     'offer_id': None,
+     'paid_at': None,
+     'amount': None,
+     'currency': None}
+
+If you prefer to be notified whenever an offer is paid, you can set up a
+webhook as follows, and we will call it whenever a payment is made.
+
+``` python
+r = fs.set_webhook(webhook_url="https://example.com/webhook")
+r.json()
+```
+
+    {'name': 'Pol',
+     'last_name': 'Alvarez Vecino',
+     'email': 'pol@fewsats.com',
+     'billing_info': None,
+     'id': 1,
+     'created_at': '2024-08-20T16:13:01.255Z',
+     'webhook_url': 'https://example.com/webhook'}
 
 ### AI Agent Integration
 
