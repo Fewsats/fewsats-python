@@ -33,10 +33,11 @@ class Fewsats:
 def _request(self: Fewsats, 
              method: str, # The HTTP method to use
              path: str, # The path to request
+             timeout: int = 10, # Timeout for the request in s
              **kwargs) -> Dict[str, Any]:
     "Makes an authenticated request to Fewsats API"
     url = f"{self.base_url}/{path}"
-    return  self._httpx_client.request(method, url, **kwargs)
+    return  self._httpx_client.request(method, url, timeout=timeout, **kwargs)
 
 # %% ../nbs/00_core.ipynb 14
 @patch
@@ -133,7 +134,7 @@ def pay_offer(self:Fewsats,
 
     Returns payment status response"""
     data = {"payment_method": payment_method, **l402_offer} if payment_method else l402_offer
-    return self._request("POST", "v0/l402/purchases/from-offer", json=data)
+    return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
 
 # %% ../nbs/00_core.ipynb 46
 @patch
