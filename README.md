@@ -53,14 +53,14 @@ fs.payment_methods().json(), fs.balance().json(), fs.me().json()
        'exp_month': 12,
        'exp_year': 2034,
        'is_default': True}],
-     [{'id': 1, 'balance': 4464, 'currency': 'usd'}],
+     [{'id': 1, 'balance': 4463, 'currency': 'usd'}],
      {'name': 'Pol',
       'last_name': 'Alvarez Vecino',
       'email': 'pol@fewsats.com',
       'billing_info': None,
       'id': 1,
       'created_at': '2024-08-20T16:13:01.255Z',
-      'webhook_url': 'https://example.com/webhook'})
+      'webhook_url': 'https://example.com/asdfagasdfaasdfa'})
 
 The `pay` method uses the information returned by a [L402
 Protocol](https://github.com/l402-protocol/l402?tab=readme-ov-file#402-response-format)
@@ -201,7 +201,70 @@ line.
 fs.balance()
 ```
 
-    [{'id': 15, 'balance': 5963, 'currency': 'usd'}]
+    <Response [200 OK]>
+
+``` python
+fs.as_tools()
+```
+
+    [<bound method Fewsats.me of <fewsats.core.Fewsats object>>,
+     <bound method Fewsats.balance of <fewsats.core.Fewsats object>>,
+     <bound method Fewsats.payment_methods of <fewsats.core.Fewsats object>>,
+     <bound method Fewsats.pay_lightning of <fewsats.core.Fewsats object>>,
+     <bound method Fewsats.payment_info of <fewsats.core.Fewsats object>>]
+
+``` python
+fs.me().json()
+```
+
+    {'name': 'Pol',
+     'last_name': 'Alvarez Vecino',
+     'email': 'pol@fewsats.com',
+     'billing_info': None,
+     'id': 1,
+     'created_at': '2024-08-20T16:13:01.255Z',
+     'webhook_url': 'https://example.com/asdfagasdfaasdfa'}
+
+``` python
+chat = Chat(model, sp='You are a helpful assistant that can pay offers.', tools=fs.as_tools())
+pr = f"Can you check my details and balance?"
+r = chat.toolloop(pr, trace_func=print)
+r
+```
+
+    Message(id='msg_01RhcqEB5U2gWTCFAjGJemnq', content=[TextBlock(text="Certainly! I'd be happy to check your details and balance for you. To do this, I'll need to use two separate functions: one to retrieve your user information and another to check your wallet balance. Let me do that for you right away.", type='text'), ToolUseBlock(id='toolu_014fq5xHbzmtBVNpTBbNa1G3', input={}, name='me', type='tool_use'), ToolUseBlock(id='toolu_01BBGf2gQ1wNz3T9X4SsuX1G', input={}, name='balance', type='tool_use')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='tool_use', stop_sequence=None, type='message', usage=In: 649; Out: 104; Cache create: 0; Cache read: 0; Total: 753)
+    Message(id='msg_01P6Cf6xpjqDwD12Xo1GSJF6', content=[TextBlock(text="I've successfully retrieved your user information and balance. However, it seems that the specific details aren't directly visible in the function results. This is likely for security reasons. \n\nWhat I can tell you is that both requests were successful, as indicated by the [200 OK] responses. This means that your account is active and accessible.\n\nIf you need more specific information about your account details or balance, you might need to log into your account directly through the official platform or app. They may have additional security measures in place to protect your sensitive information.\n\nIs there anything else you'd like me to check or any other way I can assist you with your account?", type='text')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='end_turn', stop_sequence=None, type='message', usage=In: 823; Out: 140; Cache create: 0; Cache read: 0; Total: 963)
+
+I’ve successfully retrieved your user information and balance. However,
+it seems that the specific details aren’t directly visible in the
+function results. This is likely for security reasons.
+
+What I can tell you is that both requests were successful, as indicated
+by the \[200 OK\] responses. This means that your account is active and
+accessible.
+
+If you need more specific information about your account details or
+balance, you might need to log into your account directly through the
+official platform or app. They may have additional security measures in
+place to protect your sensitive information.
+
+Is there anything else you’d like me to check or any other way I can
+assist you with your account?
+
+<details>
+
+- id: `msg_01P6Cf6xpjqDwD12Xo1GSJF6`
+- content:
+  `[{'text': "I've successfully retrieved your user information and balance. However, it seems that the specific details aren't directly visible in the function results. This is likely for security reasons. \n\nWhat I can tell you is that both requests were successful, as indicated by the [200 OK] responses. This means that your account is active and accessible.\n\nIf you need more specific information about your account details or balance, you might need to log into your account directly through the official platform or app. They may have additional security measures in place to protect your sensitive information.\n\nIs there anything else you'd like me to check or any other way I can assist you with your account?", 'type': 'text'}]`
+- model: `claude-3-5-sonnet-20240620`
+- role: `assistant`
+- stop_reason: `end_turn`
+- stop_sequence: `None`
+- type: `message`
+- usage:
+  `{'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 0, 'input_tokens': 823, 'output_tokens': 140}`
+
+</details>
 
 ``` python
 chat = Chat(model, sp='You are a helpful assistant that can pay offers.', tools=fs.as_tools())
@@ -209,41 +272,6 @@ pr = f"Could you pay the cheapest offer using lightning {l402_offer}?"
 r = chat.toolloop(pr, trace_func=print)
 r
 ```
-
-    Message(id='msg_01P2WhNQy4r7pTdqeLhv25uo', content=[TextBlock(text="Certainly! I can help you pay for the cheapest offer using Lightning. Based on the information you've provided, there's only one offer available, so we'll proceed with that one. Let's use the `pay` function to complete this transaction.\n\nFirst, let's organize the information we have:\n\n1. There's one offer for 1 credit at $0.01 (1 cent).\n2. The payment method is Lightning.\n3. We have a payment context token and a payment request URL.\n\nNow, let's call the `pay` function with the required parameters:", type='text'), ToolUseBlock(id='toolu_01KqP7nL9J48keGPJoPS2yGf', input={'purl': 'https://stock.l402.org/l402/payment-request', 'pct': 'edb53dec-28f5-4cbb-924a-20e9003c20e1', 'amount': 1, 'balance': 1, 'currency': 'USD', 'description': 'Purchase 1 credit for API access', 'offer_id': 'offer_c668e0c0', 'payment_methods': ['lightning'], 'title': '1 Credit Package', 'type': 'top-up'}, name='pay', type='tool_use')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='tool_use', stop_sequence=None, type='message', usage=In: 1002; Out: 395; Cache create: 0; Cache read: 0; Total: 1397)
-    Message(id='msg_01Tm57TAVcqN4Gh1dV7NdR4b', content=[TextBlock(text="Great news! The payment has been successfully processed. Here's a summary of the transaction:\n\n1. Payment Status: Success\n2. Amount Paid: 1 cent (USD)\n3. Payment Method: Lightning\n4. Title: 1 Credit Package\n5. Description: Purchase 1 credit for API access\n6. Type: Top-up\n7. Transaction ID: 253\n8. Created At: 2024-12-26T15:21:23.413Z\n\nThe payment has been completed successfully using the Lightning network. You should now have 1 credit added to your API access. Is there anything else you'd like to know about this transaction or any other assistance you need?", type='text')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='end_turn', stop_sequence=None, type='message', usage=In: 1952; Out: 156; Cache create: 0; Cache read: 0; Total: 2108)
-
-Great news! The payment has been successfully processed. Here’s a
-summary of the transaction:
-
-1.  Payment Status: Success
-2.  Amount Paid: 1 cent (USD)
-3.  Payment Method: Lightning
-4.  Title: 1 Credit Package
-5.  Description: Purchase 1 credit for API access
-6.  Type: Top-up
-7.  Transaction ID: 253
-8.  Created At: 2024-12-26T15:21:23.413Z
-
-The payment has been completed successfully using the Lightning network.
-You should now have 1 credit added to your API access. Is there anything
-else you’d like to know about this transaction or any other assistance
-you need?
-
-<details>
-
-- id: `msg_01Tm57TAVcqN4Gh1dV7NdR4b`
-- content:
-  `[{'text': "Great news! The payment has been successfully processed. Here's a summary of the transaction:\n\n1. Payment Status: Success\n2. Amount Paid: 1 cent (USD)\n3. Payment Method: Lightning\n4. Title: 1 Credit Package\n5. Description: Purchase 1 credit for API access\n6. Type: Top-up\n7. Transaction ID: 253\n8. Created At: 2024-12-26T15:21:23.413Z\n\nThe payment has been completed successfully using the Lightning network. You should now have 1 credit added to your API access. Is there anything else you'd like to know about this transaction or any other assistance you need?", 'type': 'text'}]`
-- model: `claude-3-5-sonnet-20240620`
-- role: `assistant`
-- stop_reason: `end_turn`
-- stop_sequence: `None`
-- type: `message`
-- usage:
-  `{'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 0, 'input_tokens': 1952, 'output_tokens': 156}`
-
-</details>
 
 ``` python
 fs.balance()
