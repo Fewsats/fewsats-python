@@ -31,5 +31,15 @@ async def _pay_lightning(invoice: str, amount: int, currency: str = "USD", descr
     description: Optional payment description"""
     return handle_response(Fewsats().pay_lightning(invoice, amount, currency, description))
 
+@mcp.tool()
+async def _get_payment_details(payment_request_url: str, offer_id: str, payment_method: str, payment_context_token: str) -> str:
+    """Get payment details for a payment request.
+
+    payment_request_url: URL for the payment request
+    offer_id: ID of the offer
+    payment_method: Payment method to use
+    payment_context_token: Payment context token"""
+    return handle_response(Fewsats().get_payment_details(payment_request_url, offer_id, payment_method, payment_context_token))
+
 if __name__ == "__main__":
     mcp.run()
