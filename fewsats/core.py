@@ -20,7 +20,7 @@ class Fewsats:
     "Client for interacting with the Fewsats API"
     def __init__(self,
                  api_key: str = None, # The API key for the Fewsats account
-                 base_url: str = "https://hub-5n97k.ondigitalocean.app"): # The Fewsats API base URL
+                 base_url: str = "https://api.fewsats.com"): # The Fewsats API base URL
         self.api_key = api_key or os.environ.get("FEWSATS_API_KEY")
         if not self.api_key:
             raise ValueError("The api_key client option must be set either by passing api_key to the client or by setting the FEWSATS_API_KEY environment variable")
@@ -90,26 +90,26 @@ def get_payment_details(self:Fewsats,
     return httpx.post(payment_request_url, json=data)
 
 
-# %% ../nbs/00_core.ipynb 32
+# %% ../nbs/00_core.ipynb 33
 @patch
 def get_payment_status(self:Fewsats,
                        payment_context_token:str,
                        ) -> dict:
     return self._request("GET", f"v0/l402/payment-status?payment_context_token={payment_context_token}")
 
-# %% ../nbs/00_core.ipynb 34
+# %% ../nbs/00_core.ipynb 35
 @patch
 def set_webhook(self:Fewsats,
                        webhook_url:str,
                        ) -> dict:
     return self._request("POST", f"v0/users/webhook/set", json={"webhook_url": webhook_url})
 
-# %% ../nbs/00_core.ipynb 37
+# %% ../nbs/00_core.ipynb 38
 @patch
 def pay_lightning(self: Fewsats, 
                   invoice: str, # lightning invoice
                   amount: int, # amount in cents
-                  currency: str = "USD", # currency
+                  currency: str = "usd", # currency
                   description: str = "" ): # description of the payment 
     "Pay for a lightning invoice"
     data = {
@@ -120,7 +120,7 @@ def pay_lightning(self: Fewsats,
     }
     return self._request("POST", "v0/l402/purchases/lightning", json=data)
 
-# %% ../nbs/00_core.ipynb 41
+# %% ../nbs/00_core.ipynb 42
 class Offer(BasicRepr):
     "Represents a single L402 offer"
     def __init__(self, 
@@ -175,9 +175,24 @@ class L402Offers(BasicRepr):
         )
 
 
-# %% ../nbs/00_core.ipynb 44
+# %% ../nbs/00_core.ipynb 46
 @patch
 def pay_offer(self:Fewsats,
+        offer_id : str, # the offer id to pay for
+        l402_offer: L402Offers, # a dictionary containing L402 offers
+) -> dict: # payment status response
+    """Pays an offer_id from the l402_offers. This tools requires the LLM caller to 
+    support custom classes as parameters like Claudette does.
+
+    Returns payment status response"""
+    offer_dict = l402_offer.as_dict()
+    data = {"offer_id": offer_id, **offer_dict}
+    return self._request("POST", "v0/l402/purchases/from-offer", json=data)
+
+
+# %% ../nbs/00_core.ipynb 50
+@patch
+def pay_offer_str(self:Fewsats,
         offer_id : str, # the offer id to pay for
         l402_offer: str, # JSON string containing L402 offers
 ) -> dict: # payment status response
@@ -189,7 +204,7 @@ def pay_offer(self:Fewsats,
             {
                 'offer_id': 'test_offer_2',  # String identifier for the offer
                 'amount': 1,                 # Numeric cost value
-                'currency': 'USD',           # Currency code
+                'currency': 'usd',           # Currency code
                 'description': 'Test offer', # Text description
                 'title': 'Test Package'      # Title of the package
             }
@@ -212,14 +227,14 @@ def pay_offer(self:Fewsats,
     
     return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
 
-# %% ../nbs/00_core.ipynb 51
+# %% ../nbs/00_core.ipynb 54
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/outgoing-payments/{pid}")
 
-# %% ../nbs/00_core.ipynb 54
+# %% ../nbs/00_core.ipynb 57
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"
@@ -227,6 +242,6 @@ def as_tools(self:Fewsats):
         self.me,
         self.balance,
         self.payment_methods,
-        self.pay_offer,
+        self.pay_offer_str,
         self.payment_info,
     ]
