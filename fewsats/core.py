@@ -185,12 +185,13 @@ def pay_offer(self:Fewsats,
     support custom classes as parameters like Claudette does.
 
     Returns payment status response"""
+    if isinstance(l402_offer, dict): l402_offer = L402Offers.from_dict(l402_offer)
     offer_dict = l402_offer.as_dict()
     data = {"offer_id": offer_id, **offer_dict}
     return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
 
-# %% ../nbs/00_core.ipynb 50
+# %% ../nbs/00_core.ipynb 49
 @patch
 def pay_offer_str(self:Fewsats,
         offer_id : str, # the offer id to pay for
@@ -227,14 +228,14 @@ def pay_offer_str(self:Fewsats,
     
     return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
 
-# %% ../nbs/00_core.ipynb 54
+# %% ../nbs/00_core.ipynb 53
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/outgoing-payments/{pid}")
 
-# %% ../nbs/00_core.ipynb 57
+# %% ../nbs/00_core.ipynb 56
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"

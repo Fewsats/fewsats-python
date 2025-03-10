@@ -38,6 +38,7 @@ from fewsats.core import *
 fs = Fewsats()
 import os
 fs = Fewsats(api_key=os.getenv("FEWSATS_LOCAL_API_KEY"), base_url='http://localhost:8000')
+
 fs.payment_methods().json(), fs.balance().json(), fs.me().json()
 ```
 
@@ -53,14 +54,14 @@ fs.payment_methods().json(), fs.balance().json(), fs.me().json()
        'exp_month': 12,
        'exp_year': 2034,
        'is_default': True}],
-     [{'id': 1, 'balance': 4463, 'currency': 'usd'}],
+     [{'id': 1, 'balance': 4421, 'currency': 'usd'}],
      {'name': 'Pol',
       'last_name': 'Alvarez Vecino',
       'email': 'pol@fewsats.com',
       'billing_info': None,
       'id': 1,
       'created_at': '2024-08-20T16:13:01.255Z',
-      'webhook_url': 'https://example.com/asdfagasdfaasdfa'})
+      'webhook_url': 'https://example.com'})
 
 The `pay` method uses the information returned by a [L402
 Protocol](https://github.com/l402-protocol/l402?tab=readme-ov-file#402-response-format)
@@ -75,7 +76,6 @@ l402_offer = {
    "offers":[
       {
          "amount":1,
-         "balance":1,
          "currency":"USD",
          "description":"Purchase 1 credit for API access",
          "offer_id":"offer_c668e0c0",
@@ -83,22 +83,20 @@ l402_offer = {
             "lightning"
          ],
          "title":"1 Credit Package",
-         "type":"top-up"
       }
    ],
    "payment_context_token":"edb53dec-28f5-4cbb-924a-20e9003c20e1",
    "payment_request_url":"https://stock.l402.org/l402/payment-request",
-   "terms_url":"https://link-to-terms.com",
-   "version":"0.2.1"
+   "version":"0.2.2"
 }
 ```
 
 ``` python
-fs.pay_offer(l402_offer).json()
+fs.pay_offer(l402_offer['offers'][0]['offer_id'], l402_offer).json()
 ```
 
-    {'id': 121,
-     'created_at': '2025-02-10T11:04:48.083Z',
+    {'id': 164,
+     'created_at': '2025-03-10T14:53:03.282Z',
      'status': 'success',
      'payment_method': 'lightning'}
 
