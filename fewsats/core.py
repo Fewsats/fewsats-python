@@ -122,46 +122,39 @@ def pay_lightning(self: Fewsats,
 # %% ../nbs/00_core.ipynb 41
 @patch
 def pay_offer(self:Fewsats,
-        l402_offer: Dict, # a dictionary containing the response of an L402 endpoint
-        payment_method:str = '', # preferred payment method (optional)
+        offer_id : str, # the offer id to pay for
+        l402_offer: Dict, # a dictionary containing L402 offers
 ) -> dict: # payment status response
-    """Pays an L402 response. Fewsats will choose payment method if left blank.
-    If multiple offers are passed, the first one will be chosen.
+    """Pays an offer_id from the l402_offers.
 
-    This method is not recommended for LLMs as they struggle with complex types like Dicts during
-    function calling. This method should be used by a higher-level abstraction SDK that is in 
-    turn exposed to the LLM, for example, with the `as_tools()` paradigm.
+    The l402_offer parameter must be a dictionary with this structure:
+    {
+        'offers': [
+            {
+                'offer_id': 'test_offer_2',  # String identifier for the offer
+                'amount': 1,                 # Numeric cost value
+                'currency': 'USD',           # Currency code
+                'description': 'Test offer', # Text description
+                'title': 'Test Package'      # Title of the package
+            }
+        ],
+        'payment_context_token': '60a8e027-8b8b-4ccf-b2b9-380ed0930283',  # Payment context token
+        'payment_request_url': 'https://api.fewsats.com/v0/l402/payment-request',  # Payment URL
+        'version': '0.2.2'  # API version
+    }
 
     Returns payment status response"""
-    data = {"payment_method": payment_method, **l402_offer} if payment_method else l402_offer
-    return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
+    data = {"offer_id": offer_id, **l402_offer}
+    return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
 # %% ../nbs/00_core.ipynb 45
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
-    return self._request("GET", f"v0/l402/purchases/{pid}")
+    return self._request("GET", f"v0/l402/outgoing-payments/{pid}")
 
 # %% ../nbs/00_core.ipynb 48
-@patch
-def wait_for_settlement(self:Fewsats,
-                        pid:str, # purchase id
-                        max_interval:int=120, # maximum interval between checks in seconds
-                        max_wait:int=600): # maximum total wait time in seconds
-    "Wait for payment settlement with exponential backoff"
-    start,wait = time(),1
-    while time() - start < max_wait:
-        r = self.payment_info(pid)
-        r.raise_for_status()
-        status = r['status']
-        if status == 'success': return r
-        if status == 'failed': raise ValueError(f"Payment {pid} failed")
-        sleep(min(wait, max_interval))
-        wait *= 2
-    raise TimeoutError(f"Payment {pid} did not settle within {max_wait} seconds. Final status: {status}")
-
-# %% ../nbs/00_core.ipynb 51
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"
