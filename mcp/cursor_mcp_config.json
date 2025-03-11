@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+      "fewsats": {
+        "command": "/home/albert/git/fewsats-python/mcp/run_mcp.sh",
+        "args": []
+      }
+    }
+  }
