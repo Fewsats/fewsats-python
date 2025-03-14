@@ -40,4 +40,5 @@ d = { 'settings': { 'branch': 'main',
                               'fewsats.l402.PaymentOffers.__init__': ('claudette.html#paymentoffers.__init__', 'fewsats/l402.py'),
                               'fewsats.l402.PaymentOffers.__str__': ('claudette.html#paymentoffers.__str__', 'fewsats/l402.py'),
                               'fewsats.l402.PaymentOffers.by_payment': ('claudette.html#paymentoffers.by_payment', 'fewsats/l402.py'),
-                              'fewsats.l402.get_payment_details': ('claudette.html#get_payment_details', 'fewsats/l402.py')}}}
+                              'fewsats.l402.get_payment_details': ('claudette.html#get_payment_details', 'fewsats/l402.py')},
+            'fewsats.main': {}}}

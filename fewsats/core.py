@@ -50,7 +50,7 @@ def me(self: Fewsats):
 # %% ../nbs/00_core.ipynb 16
 @patch
 def balance(self: Fewsats):
-    "Retrieve the balance of the user's wallet."
+    "Retrieve the balance of the user's wallet. Amounts are always in USD cents."
     return self._request("GET", "v0/wallets")
 
 
@@ -81,20 +81,23 @@ def create_offers(self:Fewsats,
 # %% ../nbs/00_core.ipynb 29
 @patch
 def get_payment_details(self:Fewsats,
-                       payment_request_url:str,
-                       offer_id:str,
-                       payment_method:str,
-                       payment_context_token:str,
+                       payment_request_url:str, # The payment request URL
+                       offer_id:str, # The offer ID
+                       payment_method:str, # The payment method (lightning, credit_card, ...)
+                       payment_context_token:str, # The payment context token
                        ) -> dict:
+    """Gets payment details for a specific offer. Use this as buyer when you want to make the payment manually."""
     data = {"offer_id": offer_id, "payment_method": payment_method, "payment_context_token": payment_context_token}
     return httpx.post(payment_request_url, json=data)
 
 
-# %% ../nbs/00_core.ipynb 33
+# %% ../nbs/00_core.ipynb 32
 @patch
-def get_payment_status(self:Fewsats,
-                       payment_context_token:str,
+def get_payment_status(self:Fewsats, 
+                       payment_context_token:str, # The payment context token
                        ) -> dict:
+    """Gets the status of a submitted payment. 
+    Vendors should use this to check if anyone has paid for their offer associated with the token."""
     return self._request("GET", f"v0/l402/payment-status?payment_context_token={payment_context_token}")
 
 # %% ../nbs/00_core.ipynb 35
@@ -102,6 +105,8 @@ def get_payment_status(self:Fewsats,
 def set_webhook(self:Fewsats,
                        webhook_url:str,
                        ) -> dict:
+    """Set the URL where you want to receive webhooks when you receive a payment.
+    Currently only 1 webhook is supported per user."""
     return self._request("POST", f"v0/users/webhook/set", json={"webhook_url": webhook_url})
 
 # %% ../nbs/00_core.ipynb 38
@@ -111,7 +116,7 @@ def pay_lightning(self: Fewsats,
                   amount: int, # amount in cents
                   currency: str = "usd", # currency
                   description: str = "" ): # description of the payment 
-    "Pay for a lightning invoice"
+    "Pay for a lightning invoice directly."
     data = {
         "invoice": invoice,
         "amount": amount,
@@ -120,7 +125,7 @@ def pay_lightning(self: Fewsats,
     }
     return self._request("POST", "v0/l402/purchases/lightning", json=data)
 
-# %% ../nbs/00_core.ipynb 42
+# %% ../nbs/00_core.ipynb 41
 class Offer(BasicRepr):
     "Represents a single L402 offer"
     def __init__(self, 
@@ -175,15 +180,28 @@ class L402Offers(BasicRepr):
         )
 
 
-# %% ../nbs/00_core.ipynb 46
+# %% ../nbs/00_core.ipynb 45
 @patch
 def pay_offer(self:Fewsats,
         offer_id : str, # the offer id to pay for
         l402_offer: L402Offers, # a dictionary containing L402 offers
 ) -> dict: # payment status response
-    """Pays an offer_id from the l402_offers. This tools requires the LLM caller to 
-    support custom classes as parameters like Claudette does.
-
+    """Pays an offer_id from the l402_offers. 
+    The l402_offer parameter must be a dictionary with this structure:
+    {
+        'offers': [
+            {
+                'offer_id': 'test_offer_2',  # String identifier for the offer
+                'amount': 1,                 # USD cents
+                'currency': 'usd',           # Currency code
+                'description': 'Test offer', # Text description
+                'title': 'Test Package'      # Title of the package
+            }
+        ],
+        'payment_context_token': 'token',  # Payment context token
+        'payment_request_url': 'https://api.fewsats.com/v0/l402/payment-request',  # Payment URL
+        'version': '0.2.2'  # API version
+    }
     Returns payment status response"""
     if isinstance(l402_offer, dict): l402_offer = L402Offers.from_dict(l402_offer)
     offer_dict = l402_offer.as_dict()
@@ -191,7 +209,7 @@ def pay_offer(self:Fewsats,
     return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
 
-# %% ../nbs/00_core.ipynb 49
+# %% ../nbs/00_core.ipynb 48
 @patch
 def pay_offer_str(self:Fewsats,
         offer_id : str, # the offer id to pay for
@@ -228,14 +246,14 @@ def pay_offer_str(self:Fewsats,
     
     return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
 
-# %% ../nbs/00_core.ipynb 53
+# %% ../nbs/00_core.ipynb 51
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/outgoing-payments/{pid}")
 
-# %% ../nbs/00_core.ipynb 56
+# %% ../nbs/00_core.ipynb 54
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"
