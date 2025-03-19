@@ -129,7 +129,7 @@ def pay_lightning(self: Fewsats,
 class Offer(BasicRepr):
     "Represents a single L402 offer"
     def __init__(self, 
-                 offer_id: str,
+                 id: str,
                  amount: int,
                  currency: str,
                  description: str,
@@ -139,7 +139,7 @@ class Offer(BasicRepr):
         store_attr()
 
     def __repr__(self):
-        return f"Offer: {self.title}\nID: {self.offer_id}\nAmount: {self.amount/100} {self.currency}\nDescription: {self.description}"
+        return f"Offer: {self.title}\nID: {self.id}\nAmount: {self.amount/100} {self.currency}\nDescription: {self.description}"
     
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> 'Offer':
@@ -191,7 +191,7 @@ def pay_offer(self:Fewsats,
     {
         'offers': [
             {
-                'offer_id': 'test_offer_2',  # String identifier for the offer
+                'id': 'test_offer_2',  # String identifier for the offer
                 'amount': 1,                 # USD cents
                 'currency': 'usd',           # Currency code
                 'description': 'Test offer', # Text description

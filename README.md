@@ -78,7 +78,7 @@ l402_offer = {
          "amount":1,
          "currency":"USD",
          "description":"Purchase 1 credit for API access",
-         "offer_id":"offer_c668e0c0",
+         "id":"offer_c668e0c0",
          "payment_methods":[
             "lightning"
          ],
@@ -92,7 +92,7 @@ l402_offer = {
 ```
 
 ``` python
-fs.pay_offer(l402_offer['offers'][0]['offer_id'], l402_offer).json()
+fs.pay_offer(l402_offer['offers'][0]['id'], l402_offer).json()
 ```
 
     {'id': 164,
@@ -120,7 +120,7 @@ offers for receiving payments as follows.
 ``` python
 # Create offers for receiving payments
 offers_data = [{
-   "offer_id": "offer_example",
+   "id": "offer_example",
    "amount": 1,
    "currency": "USD",
    "description": "Receive payment for your service",
