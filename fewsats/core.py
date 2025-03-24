@@ -15,7 +15,7 @@ from fastcore.basics import BasicRepr
 from fastcore.utils import store_attr
 from typing import List, Dict, Any
 
-# %% ../nbs/00_core.ipynb 6
+# %% ../nbs/00_core.ipynb 7
 class Fewsats:
     "Client for interacting with the Fewsats API"
     def __init__(self,
@@ -29,7 +29,7 @@ class Fewsats:
         self._httpx_client.headers.update({"Authorization": f"Token {self.api_key}"})
 
 
-# %% ../nbs/00_core.ipynb 9
+# %% ../nbs/00_core.ipynb 10
 @patch
 def _request(self: Fewsats, 
              method: str, # The HTTP method to use
@@ -40,28 +40,28 @@ def _request(self: Fewsats,
     url = f"{self.base_url}/{path}"
     return  self._httpx_client.request(method, url, timeout=timeout, **kwargs)
 
-# %% ../nbs/00_core.ipynb 13
+# %% ../nbs/00_core.ipynb 14
 @patch
 def me(self: Fewsats):
     "Retrieve the user's info."
     return self._request("GET", "v0/users/me")
 
 
-# %% ../nbs/00_core.ipynb 16
+# %% ../nbs/00_core.ipynb 17
 @patch
 def balance(self: Fewsats):
     "Retrieve the balance of the user's wallet. Amounts are always in USD cents."
     return self._request("GET", "v0/wallets")
 
 
-# %% ../nbs/00_core.ipynb 19
+# %% ../nbs/00_core.ipynb 20
 @patch
 def payment_methods(self: Fewsats) -> List[Dict[str, Any]]:
     "Retrieve the user's payment methods, raises an exception for error status codes."
     return self._request("GET", "v0/stripe/payment-methods")
 
 
-# %% ../nbs/00_core.ipynb 23
+# %% ../nbs/00_core.ipynb 24
 @patch
 def _preview_payment(self: Fewsats,
                     amount: str): # The amount in USD cents
@@ -70,7 +70,7 @@ def _preview_payment(self: Fewsats,
     return self._request("POST", "v0/l402/preview/purchase/amount", json={"amount_usd": amount})
 
 
-# %% ../nbs/00_core.ipynb 26
+# %% ../nbs/00_core.ipynb 27
 @patch
 def create_offers(self:Fewsats,
                  offers:List[Dict[str,Any]], # List of offer objects following OfferCreateV0 schema
@@ -78,7 +78,7 @@ def create_offers(self:Fewsats,
     "Create offers for L402 payment server"
     return self._request("POST", "v0/l402/offers", json={"offers": offers})
 
-# %% ../nbs/00_core.ipynb 29
+# %% ../nbs/00_core.ipynb 30
 @patch
 def get_payment_details(self:Fewsats,
                        payment_request_url:str, # The payment request URL
@@ -91,7 +91,7 @@ def get_payment_details(self:Fewsats,
     return httpx.post(payment_request_url, json=data)
 
 
-# %% ../nbs/00_core.ipynb 32
+# %% ../nbs/00_core.ipynb 33
 @patch
 def get_payment_status(self:Fewsats, 
                        payment_context_token:str, # The payment context token
@@ -100,7 +100,7 @@ def get_payment_status(self:Fewsats,
     Vendors should use this to check if anyone has paid for their offer associated with the token."""
     return self._request("GET", f"v0/l402/payment-status?payment_context_token={payment_context_token}")
 
-# %% ../nbs/00_core.ipynb 35
+# %% ../nbs/00_core.ipynb 36
 @patch
 def set_webhook(self:Fewsats,
                        webhook_url:str,
@@ -109,7 +109,7 @@ def set_webhook(self:Fewsats,
     Currently only 1 webhook is supported per user."""
     return self._request("POST", f"v0/users/webhook/set", json={"webhook_url": webhook_url})
 
-# %% ../nbs/00_core.ipynb 38
+# %% ../nbs/00_core.ipynb 39
 @patch
 def pay_lightning(self: Fewsats, 
                   invoice: str, # lightning invoice
@@ -125,7 +125,7 @@ def pay_lightning(self: Fewsats,
     }
     return self._request("POST", "v0/l402/purchases/lightning", json=data)
 
-# %% ../nbs/00_core.ipynb 41
+# %% ../nbs/00_core.ipynb 42
 class Offer(BasicRepr):
     "Represents a single L402 offer"
     def __init__(self, 
@@ -180,7 +180,7 @@ class L402Offers(BasicRepr):
         )
 
 
-# %% ../nbs/00_core.ipynb 45
+# %% ../nbs/00_core.ipynb 46
 @patch
 def pay_offer(self:Fewsats,
         offer_id : str, # the offer id to pay for
@@ -209,7 +209,7 @@ def pay_offer(self:Fewsats,
     return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
 
-# %% ../nbs/00_core.ipynb 48
+# %% ../nbs/00_core.ipynb 49
 @patch
 def pay_offer_str(self:Fewsats,
         offer_id : str, # the offer id to pay for
@@ -246,14 +246,44 @@ def pay_offer_str(self:Fewsats,
     
     return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
 
-# %% ../nbs/00_core.ipynb 51
+# %% ../nbs/00_core.ipynb 52
+@patch
+def pay_link(self:Fewsats,
+        url: str, # URL to purchase from
+        description: str, # Description of the purchase
+        price: int, # Price in USD cents
+        payment_method: str = "credit_card", # Payment method (credit_card, lightning, etc.)
+        title: str = "Purchase from URL" # Title of the purchase
+) -> dict: # payment status response
+    """Creates a purchase record for an external URL.
+    
+    Args:
+        url: The URL to purchase from
+        description: Description of the purchase
+        price: Price in USD cents
+        payment_method: Payment method to use (default: credit_card)
+        title: Title of the purchase (default: "Purchase from URL")
+        
+    Returns:
+        Payment status response containing information about the purchase
+    """
+    data = {
+        "url": url,
+        "description": description,
+        "price": price,
+        "payment_method": payment_method,
+        "title": title
+    }
+    return self._request("POST", "v0/l402/purchases/from-link", json=data)
+
+# %% ../nbs/00_core.ipynb 55
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/outgoing-payments/{pid}")
 
-# %% ../nbs/00_core.ipynb 54
+# %% ../nbs/00_core.ipynb 58
 @patch
 def as_tools(self:Fewsats):
     "Return list of available tools for AI agents"
