@@ -157,11 +157,11 @@ fs.get_payment_status(payment_context_token=offers["payment_context_token"]).jso
      'amount': None,
      'currency': None}
 
-If you prefer to be notified whenever an offer is paid, you can set up a
+If you prefer to be notified whenever an offer is paid, you can add a
 webhook as follows, and we will call it whenever a payment is made.
 
 ``` python
-r = fs.set_webhook(webhook_url="https://example.com/webhook")
+r = fs.add_webhook(webhook_url="https://example.com/webhook")
 r.json()
 ```
 
