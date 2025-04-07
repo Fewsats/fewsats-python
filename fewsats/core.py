@@ -225,7 +225,7 @@ def pay_offer_str(self:Fewsats,
     {
         'offers': [
             {
-                'offer_id': 'test_offer_2',  # String identifier for the offer
+                'id': 'test_offer_2',  # String identifier for the offer
                 'amount': 1,                 # Numeric cost value
                 'currency': 'usd',           # Currency code
                 'description': 'Test offer', # Text description
