@@ -20,6 +20,10 @@ from typing import List, Dict, Any
 
 # %% ../nbs/00_core.ipynb 8
 class Fewsats:
+
+    WEBHOOK_VERSION = "v1"
+    WEBHOOK_SIGNATURE_HEADER = "Fewsats-Signature"
+
     "Client for interacting with the Fewsats API"
     def __init__(self,
                  api_key: str = None, # The API key for the Fewsats account
@@ -150,7 +154,7 @@ def verify_webhook(cls:Fewsats,
 
     payload_str = data.decode("utf-8")
 
-    if signature_version != "v1":
+    if signature_version != cls.WEBHOOK_VERSION:
         raise ValueError("Unsupported signature version")
 
     if timestamp.isdigit():
