@@ -163,7 +163,7 @@ def verify_webhook(cls:Fewsats,
         raise ValueError("Invalid timestamp")
 
     if timestamp - time.time() > 300:
-        raise ValueError("Timestamp is too old")
+        raise ValueError("Timestamp is older than 5 minutes")
 
     signed_payload = f"{timestamp}.{payload_str}"
 
