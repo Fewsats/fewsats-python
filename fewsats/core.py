@@ -195,7 +195,7 @@ def pay_lightning(self: Fewsats,
     }
     return self._request("POST", "v0/l402/purchases/lightning", json=data)
 
-# %% ../nbs/00_core.ipynb 45
+# %% ../nbs/00_core.ipynb 46
 class Offer(BasicRepr):
     "Represents a single L402 offer"
     def __init__(self, 
@@ -250,7 +250,7 @@ class L402Offers(BasicRepr):
         )
 
 
-# %% ../nbs/00_core.ipynb 49
+# %% ../nbs/00_core.ipynb 50
 @patch
 def pay_offer(self:Fewsats,
         offer_id : str, # the offer id to pay for
@@ -279,7 +279,7 @@ def pay_offer(self:Fewsats,
     return self._request("POST", "v0/l402/purchases/from-offer", json=data)
 
 
-# %% ../nbs/00_core.ipynb 52
+# %% ../nbs/00_core.ipynb 53
 @patch
 def pay_offer_str(self:Fewsats,
         offer_id : str, # the offer id to pay for
@@ -316,7 +316,7 @@ def pay_offer_str(self:Fewsats,
     
     return self._request("POST", "v0/l402/purchases/from-offer", timeout=20, json=data)
 
-# %% ../nbs/00_core.ipynb 55
+# %% ../nbs/00_core.ipynb 56
 @patch
 def pay_link(self:Fewsats,
         url: str, # URL to purchase from
@@ -346,14 +346,70 @@ def pay_link(self:Fewsats,
     }
     return self._request("POST", "v0/l402/purchases/from-link", json=data)
 
-# %% ../nbs/00_core.ipynb 58
+# %% ../nbs/00_core.ipynb 59
 @patch
 def payment_info(self:Fewsats,
                   pid:str): # purchase id
     "Retrieve the details of a payment."
     return self._request("GET", f"v0/l402/outgoing-payments/{pid}")
 
-# %% ../nbs/00_core.ipynb 61
+# %% ../nbs/00_core.ipynb 62
+@patch
+def pay_x402_offer(self:Fewsats,
+                               payload:Dict[str, Any], # The x402 offer payload
+                               chain:str = "base", # Blockchain chain to use
+                              ) -> dict:
+    """Creates a payment from an x402 offer and returns a payment header to access the resource.
+    
+    Args:
+        payload: The x402 offer payload containing accepts, error, and x402Version
+        chain: Blockchain chain to use (default: "base")
+        
+    Returns:
+        Dictionary containing payment_header to use for subsequent requests
+    """
+    data = {
+        "chain": chain,
+        "payload": payload
+    }
+    return self._request("POST", "v0/x402/purchases/from-offer", json=data)
+
+# %% ../nbs/00_core.ipynb 65
+@patch
+def pay_x402_link(self:Fewsats,
+                              url:str, # URL to purchase from
+                              method:str = "GET", # HTTP method to use
+                              body:Dict[str, Any] = None, # Optional request body
+                              headers:Dict[str, str] = None, # Optional request headers
+                              chain:str = "base", # Blockchain chain to use
+                             ) -> dict:
+    """Creates a purchase from an external URL that requires x402 payment.
+    
+    Args:
+        url: The URL to purchase from
+        method: HTTP method to use (default: "GET")
+        body: Optional request body
+        headers: Optional request headers
+        chain: Blockchain chain to use (default: "base")
+        
+    Returns:
+        The response from the target URL after successful payment
+    """
+    data = {
+        "url": url,
+        "method": method,
+        "chain": chain
+    }
+    
+    if body is not None:
+        data["body"] = body
+        
+    if headers is not None:
+        data["headers"] = headers
+        
+    return self._request("POST", "v0/x402/purchases/from-link", json=data)
+
+# %% ../nbs/00_core.ipynb 68
 def get_response(r): return r.status_code, r.text
 
 def wrap_with_response(method):
