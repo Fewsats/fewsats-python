@@ -374,7 +374,7 @@ def pay_x402_offer(self:Fewsats,
     }
     return self._request("POST", "v0/x402/purchases/from-offer", json=data)
 
-# %% ../nbs/00_core.ipynb 65
+# %% ../nbs/00_core.ipynb 66
 @patch
 def pay_x402_link(self:Fewsats,
                               url:str, # URL to purchase from
@@ -409,7 +409,7 @@ def pay_x402_link(self:Fewsats,
         
     return self._request("POST", "v0/x402/purchases/from-link", json=data)
 
-# %% ../nbs/00_core.ipynb 68
+# %% ../nbs/00_core.ipynb 69
 def get_response(r): return r.status_code, r.text
 
 def wrap_with_response(method):
