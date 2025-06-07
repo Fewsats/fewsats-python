@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Client for interacting with the Fewsats API">
+
+<title>client – fewsats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-06f49dda7689f94c7678c1763e921aac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="client – fewsats">
+<meta property="og:description" content="Client for interacting with the Fewsats API">
+<meta property="og:site_name" content="fewsats">
+<meta name="twitter:title" content="client – fewsats">
+<meta name="twitter:description" content="Client for interacting with the Fewsats API">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">fewsats</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./core.html">client</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fewsats</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">client</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#class" id="toc-class" class="nav-link active" data-scroll-target="#class">Class</a>
+  <ul class="collapse">
+  <li><a href="#fewsats" id="toc-fewsats" class="nav-link" data-scroll-target="#fewsats">Fewsats</a></li>
+  </ul></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#user-billing-info" id="toc-user-billing-info" class="nav-link" data-scroll-target="#user-billing-info">User &amp; Billing Info</a></li>
+  <li><a href="#fewsats.me" id="toc-fewsats.me" class="nav-link" data-scroll-target="#fewsats.me">Fewsats.me</a></li>
+  <li><a href="#fewsats.billing_info" id="toc-fewsats.billing_info" class="nav-link" data-scroll-target="#fewsats.billing_info">Fewsats.billing_info</a></li>
+  <li><a href="#balance" id="toc-balance" class="nav-link" data-scroll-target="#balance">Balance</a></li>
+  <li><a href="#fewsats.balance" id="toc-fewsats.balance" class="nav-link" data-scroll-target="#fewsats.balance">Fewsats.balance</a></li>
+  <li><a href="#payment-methods" id="toc-payment-methods" class="nav-link" data-scroll-target="#payment-methods">Payment Methods</a></li>
+  <li><a href="#fewsats.payment_methods" id="toc-fewsats.payment_methods" class="nav-link" data-scroll-target="#fewsats.payment_methods">Fewsats.payment_methods</a></li>
+  <li><a href="#preview-a-purchase" id="toc-preview-a-purchase" class="nav-link" data-scroll-target="#preview-a-purchase">Preview a Purchase</a></li>
+  <li><a href="#create-offers" id="toc-create-offers" class="nav-link" data-scroll-target="#create-offers">Create offers</a></li>
+  <li><a href="#fewsats.create_offers" id="toc-fewsats.create_offers" class="nav-link" data-scroll-target="#fewsats.create_offers">Fewsats.create_offers</a></li>
+  <li><a href="#get-payment-details" id="toc-get-payment-details" class="nav-link" data-scroll-target="#get-payment-details">Get Payment Details</a></li>
+  <li><a href="#fewsats.get_payment_details" id="toc-fewsats.get_payment_details" class="nav-link" data-scroll-target="#fewsats.get_payment_details">Fewsats.get_payment_details</a></li>
+  <li><a href="#get-payment-status" id="toc-get-payment-status" class="nav-link" data-scroll-target="#get-payment-status">Get Payment Status</a></li>
+  <li><a href="#fewsats.get_payment_status" id="toc-fewsats.get_payment_status" class="nav-link" data-scroll-target="#fewsats.get_payment_status">Fewsats.get_payment_status</a></li>
+  <li><a href="#webhooks" id="toc-webhooks" class="nav-link" data-scroll-target="#webhooks">Webhooks</a></li>
+  <li><a href="#fewsats.add_webhook" id="toc-fewsats.add_webhook" class="nav-link" data-scroll-target="#fewsats.add_webhook">Fewsats.add_webhook</a></li>
+  <li><a href="#fewsats.verify_webhook" id="toc-fewsats.verify_webhook" class="nav-link" data-scroll-target="#fewsats.verify_webhook">Fewsats.verify_webhook</a></li>
+  <li><a href="#fewsatswebhookevent" id="toc-fewsatswebhookevent" class="nav-link" data-scroll-target="#fewsatswebhookevent">FewsatsWebhookEvent</a></li>
+  </ul></li>
+  <li><a href="#pay-methods" id="toc-pay-methods" class="nav-link" data-scroll-target="#pay-methods">Pay Methods</a>
+  <ul class="collapse">
+  <li><a href="#pay-lightning-invoice" id="toc-pay-lightning-invoice" class="nav-link" data-scroll-target="#pay-lightning-invoice">Pay Lightning Invoice</a></li>
+  <li><a href="#fewsats.pay_lightning" id="toc-fewsats.pay_lightning" class="nav-link" data-scroll-target="#fewsats.pay_lightning">Fewsats.pay_lightning</a></li>
+  <li><a href="#paying-l402-offers" id="toc-paying-l402-offers" class="nav-link" data-scroll-target="#paying-l402-offers">Paying L402 Offers</a></li>
+  <li><a href="#l402offers" id="toc-l402offers" class="nav-link" data-scroll-target="#l402offers">L402Offers</a></li>
+  <li><a href="#offer" id="toc-offer" class="nav-link" data-scroll-target="#offer">Offer</a></li>
+  <li><a href="#pay-l402-offer" id="toc-pay-l402-offer" class="nav-link" data-scroll-target="#pay-l402-offer">Pay L402 Offer</a></li>
+  <li><a href="#fewsats.pay_offer" id="toc-fewsats.pay_offer" class="nav-link" data-scroll-target="#fewsats.pay_offer">Fewsats.pay_offer</a></li>
+  <li><a href="#l402-pay-offer-with-json-string" id="toc-l402-pay-offer-with-json-string" class="nav-link" data-scroll-target="#l402-pay-offer-with-json-string">L402 Pay Offer with JSON string</a></li>
+  <li><a href="#fewsats.pay_offer_str" id="toc-fewsats.pay_offer_str" class="nav-link" data-scroll-target="#fewsats.pay_offer_str">Fewsats.pay_offer_str</a></li>
+  <li><a href="#pay-link" id="toc-pay-link" class="nav-link" data-scroll-target="#pay-link">Pay Link</a></li>
+  <li><a href="#fewsats.pay_link" id="toc-fewsats.pay_link" class="nav-link" data-scroll-target="#fewsats.pay_link">Fewsats.pay_link</a></li>
+  <li><a href="#payment-info" id="toc-payment-info" class="nav-link" data-scroll-target="#payment-info">Payment Info</a></li>
+  <li><a href="#fewsats.payment_info" id="toc-fewsats.payment_info" class="nav-link" data-scroll-target="#fewsats.payment_info">Fewsats.payment_info</a></li>
+  <li><a href="#pay-x402-offer" id="toc-pay-x402-offer" class="nav-link" data-scroll-target="#pay-x402-offer">Pay X402 Offer</a></li>
+  <li><a href="#fewsats.pay_x402_offer" id="toc-fewsats.pay_x402_offer" class="nav-link" data-scroll-target="#fewsats.pay_x402_offer">Fewsats.pay_x402_offer</a></li>
+  <li><a href="#pay-x402-link" id="toc-pay-x402-link" class="nav-link" data-scroll-target="#pay-x402-link">Pay X402 Link</a></li>
+  <li><a href="#fewsats.pay_x402_link" id="toc-fewsats.pay_x402_link" class="nav-link" data-scroll-target="#fewsats.pay_x402_link">Fewsats.pay_x402_link</a></li>
+  </ul></li>
+  <li><a href="#as-tools" id="toc-as-tools" class="nav-link" data-scroll-target="#as-tools">As tools</a>
+  <ul class="collapse">
+  <li><a href="#fewsats.as_tools" id="toc-fewsats.as_tools" class="nav-link" data-scroll-target="#fewsats.as_tools">Fewsats.as_tools</a></li>
+  <li><a href="#wrap_with_response" id="toc-wrap_with_response" class="nav-link" data-scroll-target="#wrap_with_response">wrap_with_response</a></li>
+  <li><a href="#get_response" id="toc-get_response" class="nav-link" data-scroll-target="#get_response">get_response</a></li>
+  </ul></li>
+  <li><a href="#agent-demo" id="toc-agent-demo" class="nav-link" data-scroll-target="#agent-demo">Agent Demo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Fewsats/fewsats-python/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="core.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">client</h1>
+</div>
+
+<div>
+  <div class="description">
+    Client for interacting with the Fewsats API
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="class" class="level2">
+<h2 class="anchored" data-anchor-id="class">Class</h2>
+<p>The <a href="https://Fewsats.github.io/fewsats-python/core.html#fewsats"><code>Fewsats</code></a> class handles authentication and provides the foundation for our API interactions.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L24" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="fewsats" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats">Fewsats</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats (api_key:str=None, base_url:str='https://api.fewsats.com')</code></pre>
+</blockquote>
+<p><em>Initialize self. See help(type(self)) for accurate signature.</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>api_key</td>
+<td>str</td>
+<td>None</td>
+<td>The API key for the Fewsats account</td>
+</tr>
+<tr class="even">
+<td>base_url</td>
+<td>str</td>
+<td>https://api.fewsats.com</td>
+<td>The Fewsats API base URL</td>
+</tr>
+</tbody>
+</table>
+<div id="cell-5" class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> os.getenv(<span class="st">"FEWSATS_API_KEY"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> Fewsats(api_key<span class="op">=</span>k)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> os.getenv(<span class="st">"FEWSATS_LOCAL_API_KEY"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> Fewsats(api_key<span class="op">=</span>k, base_url<span class="op">=</span><span class="st">"http://localhost:8000"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>test_eq(fs.api_key, k)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>test_eq(fs._httpx_client.headers[<span class="st">"Authorization"</span>], <span class="ss">f"Token </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="user-billing-info" class="level3">
+<h3 class="anchored" data-anchor-id="user-billing-info">User &amp; Billing Info</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L52" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.me" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.me">Fewsats.me</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.me ()</code></pre>
+</blockquote>
+<p><em>Retrieve the user’s info.</em></p>
+<div id="cell-9" class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.me()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'name': 'Pol',
+  'last_name': 'Alvarez Vecino',
+  'email': 'pol@fewsats.com',
+  'id': 1,
+  'created_at': '2024-08-20T16:13:01.255Z',
+  'webhook_secret': 'whsec_Kgsdk1xApAOSBcpXViSMNp_MMCRwfNWngoxqotZMHUw',
+  'test_webhook_secret': 'whsec_Nk997GrUMG9rwEmlef7jlMCMfz2th3chUHtRBkcScIU',
+  'webhooks': [{'id': 4, 'url': 'https://example.com', 'is_test': False},
+   {'id': 8, 'url': 'https://example.com/webhook', 'is_test': False}],
+  'test_webhooks': [],
+  'require_billing_info': False})</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L59" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.billing_info" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.billing_info">Fewsats.billing_info</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.billing_info ()</code></pre>
+</blockquote>
+<p><em>Retrieve the user’s billing info.</em></p>
+<div id="cell-11" class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>billing_info <span class="op">=</span> fs.billing_info()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>billing_info.status_code, billing_info.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'full_name': 'Test Name 2',
+  'company_name': '',
+  'vat_number': None,
+  'address': 'Fake Street 123',
+  'address_line2': '',
+  'city': 'Crystal City',
+  'state': '',
+  'postal_code': '3129',
+  'country': 'US',
+  'phone': None,
+  'email': 'pol@fewsats.com'})</code></pre>
+</div>
+</div>
+</section>
+<section id="balance" class="level3">
+<h3 class="anchored" data-anchor-id="balance">Balance</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L65" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.balance" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.balance">Fewsats.balance</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.balance ()</code></pre>
+</blockquote>
+<p><em>Retrieve the balance of the user’s wallet. Amounts are always in USD cents.</em></p>
+<div id="cell-14" class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.balance()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200, [{'id': 1, 'balance': 4394, 'currency': 'usd'}])</code></pre>
+</div>
+</div>
+</section>
+<section id="payment-methods" class="level3">
+<h3 class="anchored" data-anchor-id="payment-methods">Payment Methods</h3>
+<p>Retrieve the user’s payment methods. Useful for checking which card will be used for purchases.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L72" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.payment_methods" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.payment_methods">Fewsats.payment_methods</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.payment_methods ()</code></pre>
+</blockquote>
+<p><em>Retrieve the user’s payment methods, raises an exception for error status codes.</em></p>
+<div id="cell-17" class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.payment_methods()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>payment_methods <span class="op">=</span> r.json()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>r.status_code, payment_methods</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ [{'id': 1,
+   'last4': '4242',
+   'brand': 'visa',
+   'exp_month': 12,
+   'exp_year': 2034,
+   'is_default': False},
+  {'id': 4,
+   'last4': '4242',
+   'brand': 'Visa',
+   'exp_month': 12,
+   'exp_year': 2034,
+   'is_default': True}])</code></pre>
+</div>
+</div>
+<div id="cell-18" class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">isinstance</span>(payment_methods, <span class="bu">list</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="preview-a-purchase" class="level3">
+<h3 class="anchored" data-anchor-id="preview-a-purchase">Preview a Purchase</h3>
+<p>Preview the resulting state of a purchase. Useful, for example, to check if a CC charge is needed or the purchase will use the balance.</p>
+<div id="cell-20" class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs._preview_payment(amount<span class="op">=</span><span class="st">"300"</span>) <span class="co"># 3.00 USD</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>preview <span class="op">=</span> r.json()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>r.status_code <span class="op">=</span> preview</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-offers" class="level3">
+<h3 class="anchored" data-anchor-id="create-offers">Create offers</h3>
+<p>How to use the client to generate L402 offers</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L88" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.create_offers" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.create_offers">Fewsats.create_offers</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.create_offers (offers:List[Dict[str,Any]])</code></pre>
+</blockquote>
+<p><em>Create offers for L402 payment server</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>offers</td>
+<td>List</td>
+<td>List of offer objects following OfferCreateV0 schema</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-23" class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>test_offers <span class="op">=</span> [{</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"id"</span>: <span class="st">"test_offer_2"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"amount"</span>: <span class="dv">1</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"currency"</span>: <span class="st">"usd"</span> ,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"description"</span>: <span class="st">"Test offer"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"title"</span>: <span class="st">"Test Package"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"payment_methods"</span>: [<span class="st">"lightning"</span>, <span class="st">"credit_card"</span>]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>}]</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.create_offers(test_offers)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>l402_offers <span class="op">=</span> r.json()</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>r.status_code, l402_offers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'offers': [{'id': 'test_offer_2',
+    'amount': 1,
+    'currency': 'usd',
+    'description': 'Test offer',
+    'title': 'Test Package',
+    'payment_methods': ['lightning', 'credit_card'],
+    'type': 'one-off'}],
+  'payment_context_token': '6313116c-02e7-4631-adbf-60bdebfb3813',
+  'payment_request_url': 'http://localhost:8000/v0/l402/payment-request',
+  'version': '0.2.2',
+  'requires_billing_information': False})</code></pre>
+</div>
+</div>
+</section>
+<section id="get-payment-details" class="level3">
+<h3 class="anchored" data-anchor-id="get-payment-details">Get Payment Details</h3>
+<p>Get payment details is a convenience method for buyers to retrieve the payment information like stripe checkout url, lightning invoice etc… It does not need to be used by vendors. We demonstrate it here to showcase how an offer generated by a vendor can be turned into actual payments details.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L96" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.get_payment_details" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.get_payment_details">Fewsats.get_payment_details</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.get_payment_details (payment_request_url:str, offer_id:str,
+                              payment_method:str,
+                              payment_context_token:str)</code></pre>
+</blockquote>
+<p><em>Gets payment details for a specific offer. Use this as buyer when you want to make the payment manually.</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>payment_request_url</td>
+<td>str</td>
+<td>The payment request URL</td>
+</tr>
+<tr class="even">
+<td>offer_id</td>
+<td>str</td>
+<td>The offer ID</td>
+</tr>
+<tr class="odd">
+<td>payment_method</td>
+<td>str</td>
+<td>The payment method (lightning, credit_card, …)</td>
+</tr>
+<tr class="even">
+<td>payment_context_token</td>
+<td>str</td>
+<td>The payment context token</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-26" class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.get_payment_details(l402_offers[<span class="st">"payment_request_url"</span>], l402_offers[<span class="st">"offers"</span>][<span class="dv">0</span>][<span class="st">"id"</span>], <span class="st">"lightning"</span>, l402_offers[<span class="st">"payment_context_token"</span>])</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>payment_details <span class="op">=</span> r.json()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>ln_invoice <span class="op">=</span> payment_details[<span class="st">"payment_request"</span>][<span class="st">'lightning_invoice'</span>]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>r.status_code, payment_details</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'expires_at': '2025-06-07T08:21:36.307064+00:00',
+  'offer_id': 'test_offer_2',
+  'payment_request': {'lightning_invoice': 'lnbc90n1p5y8mjapp59c04hdtct2dh0cfl0dact08z54r5s6668wupqyj4euww24qzg0jqdq523jhxapq2pskx6mpvajscqzpgxqrzpnrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqz99gpz55yqqqqqqqqqqqqqq9qrzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqz99gpz55yqqqqqqqqqqqqqq9qsp5krldkefcmj5e5lgqr3tgkut39zj0cmweynyha73v5zduu8j84v0q9qxpqysgqz7zhunh3xcxgykhdu87hdy36du2kr7pyls9z6uz0jqac0sn3gym39g7s8gk6zdt75u04e42zjstptyxltwyfy7tlmkjh5px36m2deugp72qjup'},
+  'version': '0.2.2'})</code></pre>
+</div>
+</div>
+</section>
+<section id="get-payment-status" class="level3">
+<h3 class="anchored" data-anchor-id="get-payment-status">Get Payment Status</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L109" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.get_payment_status" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.get_payment_status">Fewsats.get_payment_status</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.get_payment_status (payment_context_token:str)</code></pre>
+</blockquote>
+<p><em>Gets the status of a submitted payment. Vendors should use this to check if anyone has paid for their offer associated with the token.</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>payment_context_token</td>
+<td>str</td>
+<td>The payment context token</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-29" class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.get_payment_status(l402_offers[<span class="st">"payment_context_token"</span>])</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'payment_context_token': '6313116c-02e7-4631-adbf-60bdebfb3813',
+  'status': 'pending',
+  'offer_id': None,
+  'paid_at': None,
+  'amount': None,
+  'currency': None})</code></pre>
+</div>
+</div>
+</section>
+<section id="webhooks" class="level3">
+<h3 class="anchored" data-anchor-id="webhooks">Webhooks</h3>
+<p>Use this as a vendor to get notified when someone pays for your offer. Currently only 1 webhook is supported per user.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L118" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.add_webhook" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.add_webhook">Fewsats.add_webhook</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.add_webhook (webhook_url:str)</code></pre>
+</blockquote>
+<p><em>Add a URL to the list of webhooks that will receive notifications when you receive a payment. The webhook will be triggered for every successful payment.</em></p>
+<div id="cell-32" class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.add_webhook(<span class="st">"https://example.com"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>r, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(&lt;Response [200 OK]&gt;,
+ {'id': 4, 'url': 'https://example.com', 'is_test': False})</code></pre>
+</div>
+</div>
+<p>To verify and parse a webhook that comes from Fewsats you can use this utility</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L136" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.verify_webhook" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.verify_webhook">Fewsats.verify_webhook</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.verify_webhook (data:bytes, signature:str, webhook_secret:str)</code></pre>
+</blockquote>
+<p><em>Verify and parse a webhook that comes from Fewsats Args: data: bytes signature: str webhook_secret: str Returns: FewsatsWebhookEvent</em></p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L127" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsatswebhookevent" class="level3">
+<h3 class="anchored" data-anchor-id="fewsatswebhookevent">FewsatsWebhookEvent</h3>
+<blockquote class="blockquote">
+<pre><code> FewsatsWebhookEvent (offer_id:str, payment_context_token:str, amount:int,
+                      currency:str, status:str, timestamp:str)</code></pre>
+</blockquote>
+<div id="cell-36" class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="bu">bytes</span>(json.dumps({</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"offer_id"</span>: <span class="st">"offer-501040"</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"payment_context_token"</span>: <span class="st">"a0b1caf3-3e3b-488f-ae9c-18d64f690894"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"amount"</span>: <span class="dv">812319</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"currency"</span>: <span class="st">"USD"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"status"</span>: <span class="st">"failed"</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"timestamp"</span>: <span class="st">"2025-04-16T08:51:12Z"</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>}, sort_keys<span class="op">=</span><span class="va">True</span>, separators<span class="op">=</span>(<span class="st">','</span>, <span class="st">':'</span>)), <span class="st">"utf-8"</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>signature <span class="op">=</span> <span class="st">"t=1744793472,v1=89a491b8f3f8e72b75896faa24cb1cfade27bea12bbdfe333759809b8a573ad3"</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>event <span class="op">=</span> Fewsats.verify_webhook(data, signature, <span class="st">"whsec_bIi4m3by9sJ_KNfY5PFWb2YmAqm2WVAvwq5wGuphayE"</span>)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>event</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>FewsatsWebhookEvent(offer_id='offer-501040', payment_context_token='a0b1caf3-3e3b-488f-ae9c-18d64f690894', amount=812319, currency='USD', status='failed', timestamp='2025-04-16T08:51:12Z')</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="pay-methods" class="level2">
+<h2 class="anchored" data-anchor-id="pay-methods">Pay Methods</h2>
+<section id="pay-lightning-invoice" class="level3">
+<h3 class="anchored" data-anchor-id="pay-lightning-invoice">Pay Lightning Invoice</h3>
+<p>Pay lightning invoice is a low-level method to manually pay for a lightning invoice.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L184" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.pay_lightning" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.pay_lightning">Fewsats.pay_lightning</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.pay_lightning (invoice:str, amount:int, currency:str='usd',
+                        description:str='')</code></pre>
+</blockquote>
+<p><em>Pay for a lightning invoice directly.</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>invoice</td>
+<td>str</td>
+<td></td>
+<td>lightning invoice</td>
+</tr>
+<tr class="even">
+<td>amount</td>
+<td>int</td>
+<td></td>
+<td>amount in cents</td>
+</tr>
+<tr class="odd">
+<td>currency</td>
+<td>str</td>
+<td>usd</td>
+<td>currency</td>
+</tr>
+<tr class="even">
+<td>description</td>
+<td>str</td>
+<td></td>
+<td>description of the payment</td>
+</tr>
+</tbody>
+</table>
+<div id="cell-39" class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_lightning(invoice<span class="op">=</span>ln_invoice,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                     description<span class="op">=</span><span class="st">"fewsats webhook trial"</span>, amount<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>lightning_payment <span class="op">=</span> r.json()</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>r.status_code, lightning_payment</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'id': 'fb2b35e8-e435-42c0-903e-82e7585d9b76',
+  'created_at': '2025-06-07T07:46:38.320Z',
+  'status': 'success',
+  'payment_request_url': '',
+  'payment_context_token': '',
+  'invoice': 'lnbc90n1p5y8mjapp59c04hdtct2dh0cfl0dact08z54r5s6668wupqyj4euww24qzg0jqdq523jhxapq2pskx6mpvajscqzpgxqrzpnrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqz99gpz55yqqqqqqqqqqqqqq9qrzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqz99gpz55yqqqqqqqqqqqqqq9qsp5krldkefcmj5e5lgqr3tgkut39zj0cmweynyha73v5zduu8j84v0q9qxpqysgqz7zhunh3xcxgykhdu87hdy36du2kr7pyls9z6uz0jqac0sn3gym39g7s8gk6zdt75u04e42zjstptyxltwyfy7tlmkjh5px36m2deugp72qjup',
+  'preimage': 'a636f6d854c8412e9ccf5adb558968044436bb1e899f1e116fca8e07dbb5d32d',
+  'amount': 1,
+  'currency': 'usd',
+  'payment_method': 'lightning',
+  'title': '',
+  'description': 'fewsats webhook trial',
+  'type': '',
+  'is_test': False})</code></pre>
+</div>
+</div>
+<div id="cell-40" class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_lightning(invoice<span class="op">=</span><span class="st">'lnbc100n1p5qlv5dpp5r4jjrenyvlndnr59nx2fgk8azyeaaxzpeuy7putgm07wfnvt398qdqqcqzzsxqrrsssp54897npsmum0av3qqj6jyvl3sks4hlc67ugdyr8x85hla79u262uq9qxpqysgq3m9p2a8j7fy2pxeg5xuhyw4zwwp6md5egkez28afffmsch2l7clhw5922mxlr52gp48w0pdvnngytgj08kn4z8uv25pq7fc0mxhrs6qphe3c0k'</span>,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                     description<span class="op">=</span><span class="st">"fewsats webhook trial"</span>, amount<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>r.status_code, r.text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(400,
+ '{"detail": "An error occurred while paying the L402 invoice. Reason: The invoice has expired."}')</code></pre>
+</div>
+</div>
+</section>
+<section id="paying-l402-offers" class="level3">
+<h3 class="anchored" data-anchor-id="paying-l402-offers">Paying L402 Offers</h3>
+<p>The pay method pays for a specific offer. The user is not required to fetch the payment details beforehand. It is asynchronous and returns the <code>payment_id</code> and <code>status</code>. Using the <code>payment_id</code> we can check the status of the payment.</p>
+<p>There are two versions of the pay offer. One accepts the L402 offers as a string, which is more convenient for text-based AI agents like LLMs. The other accepts either the <a href="https://Fewsats.github.io/fewsats-python/core.html#l402offers"><code>L402Offers</code></a> custom class - supported by some libraries like <a href="https://claudette.answer.ai/core.html#tool">Claudette</a> - or a simple <code>Dict</code>.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L219" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="l402offers" class="level3">
+<h3 class="anchored" data-anchor-id="l402offers">L402Offers</h3>
+<blockquote class="blockquote">
+<pre><code> L402Offers (offers:List[__main__.Offer], payment_context_token:str,
+             payment_request_url:str, version:str)</code></pre>
+</blockquote>
+<p><em>Represents the complete L402 offers schema</em></p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L199" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="offer" class="level3">
+<h3 class="anchored" data-anchor-id="offer">Offer</h3>
+<blockquote class="blockquote">
+<pre><code> Offer (id:str, amount:int, currency:str, description:str, title:str,
+        payment_methods:List[str]=None, type:str='one-off')</code></pre>
+</blockquote>
+<p><em>Represents a single L402 offer</em></p>
+<div id="cell-44" class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>l402 <span class="op">=</span> L402Offers.from_dict(l402_offers)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>l402</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>L402 Offers:
+- Test Package (0.01 usd)
+Payment URL: http://localhost:8000/v0/l402/payment-request
+Context Token: 6313116c-02e7-4631-adbf-60bdebfb3813</code></pre>
+</div>
+</div>
+<div id="cell-45" class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we make sure that invalid offers fail</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>invalid_json <span class="op">=</span> {</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'offers'</span>: [{<span class="st">'id'</span>: <span class="st">'test_offer_2'</span>, <span class="st">'amount'</span>: <span class="dv">1</span>}],  <span class="co"># Missing fields</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'payment_context_token'</span>: <span class="st">'60a8e027-8b8b-4ccf-b2b9-380ed0930283'</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Missing payment_request_url</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>test_fail(<span class="kw">lambda</span>: Offer(<span class="bu">id</span><span class="op">=</span><span class="st">"test"</span>, amount<span class="op">=</span><span class="dv">1</span>), </span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>          contains<span class="op">=</span><span class="st">"missing 3 required positional arguments: 'currency', 'description', and 'title'"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pay-l402-offer" class="level3">
+<h3 class="anchored" data-anchor-id="pay-l402-offer">Pay L402 Offer</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L255" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.pay_offer" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.pay_offer">Fewsats.pay_offer</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.pay_offer (offer_id:str, l402_offer:__main__.L402Offers)</code></pre>
+</blockquote>
+<p><em>Pays an offer_id from the l402_offers. The l402_offer parameter must be a dictionary with this structure: { ‘offers’: [ { ‘id’: ‘test_offer_2’, # String identifier for the offer ‘amount’: 1, # USD cents ‘currency’: ‘usd’, # Currency code ‘description’: ‘Test offer’, # Text description ‘title’: ‘Test Package’ # Title of the package } ], ‘payment_context_token’: ‘token’, # Payment context token ‘payment_request_url’: ‘https://api.fewsats.com/v0/l402/payment-request’, # Payment URL ‘version’: ‘0.2.2’ # API version } Returns payment status response</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>offer_id</td>
+<td>str</td>
+<td>the offer id to pay for</td>
+</tr>
+<tr class="even">
+<td>l402_offer</td>
+<td>L402Offers</td>
+<td>a dictionary containing L402 offers</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td><strong>payment status response</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-48" class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>offer_id <span class="op">=</span> l402.offers[<span class="dv">0</span>].<span class="bu">id</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_offer(offer_id, l402)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>payment_response <span class="op">=</span> r.json()</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>r.status_code, payment_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'id': '0d73aed1-6823-4eca-97d4-384fa9430b13',
+  'created_at': '2025-06-07T07:46:42.106Z',
+  'status': 'success',
+  'payment_method': 'lightning'})</code></pre>
+</div>
+</div>
+</section>
+<section id="l402-pay-offer-with-json-string" class="level3">
+<h3 class="anchored" data-anchor-id="l402-pay-offer-with-json-string">L402 Pay Offer with JSON string</h3>
+<p>This alternative method accepts a JSON string containing L402 offers. It should be used by systems that do not support custom classes in tool calling.</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L284" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.pay_offer_str" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.pay_offer_str">Fewsats.pay_offer_str</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.pay_offer_str (offer_id:str, l402_offer:str)</code></pre>
+</blockquote>
+<p>*Pays an offer_id from the l402_offers.</p>
+<p>The l402_offer parameter must be a JSON string with this structure: { ‘offers’: [ { ‘id’: ‘test_offer_2’, # String identifier for the offer ‘amount’: 1, # Numeric cost value ‘currency’: ‘usd’, # Currency code ‘description’: ‘Test offer’, # Text description ‘title’: ‘Test Package’ # Title of the package } ], ‘payment_context_token’: ‘60a8e027-8b8b-4ccf-b2b9-380ed0930283’, # Payment context token ‘payment_request_url’: ‘https://api.fewsats.com/v0/l402/payment-request’, # Payment URL ‘version’: ‘0.2.2’ # API version }</p>
+<p>Returns payment status response*</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>offer_id</td>
+<td>str</td>
+<td>the offer id to pay for</td>
+</tr>
+<tr class="even">
+<td>l402_offer</td>
+<td>str</td>
+<td>JSON string containing L402 offers</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td><strong>payment status response</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-51" class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_offer_str(l402_offers[<span class="st">"offers"</span>][<span class="dv">0</span>][<span class="st">"id"</span>], json.dumps(l402_offers))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(400,
+ {'detail': "Invalid payment request received. Payment context token '6313116c-02e7-4631-adbf-60bdebfb3813' already used"})</code></pre>
+</div>
+</div>
+</section>
+<section id="pay-link" class="level3">
+<h3 class="anchored" data-anchor-id="pay-link">Pay Link</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L321" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.pay_link" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.pay_link">Fewsats.pay_link</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.pay_link (url:str, description:str, price:int,
+                   payment_method:str='credit_card', title:str='Purchase
+                   from URL')</code></pre>
+</blockquote>
+<p>*Creates a purchase record for an external URL.</p>
+<p>Args: url: The URL to purchase from description: Description of the purchase price: Price in USD cents payment_method: Payment method to use (default: credit_card) title: Title of the purchase (default: “Purchase from URL”)</p>
+<p>Returns: Payment status response containing information about the purchase*</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>url</td>
+<td>str</td>
+<td></td>
+<td>URL to purchase from</td>
+</tr>
+<tr class="even">
+<td>description</td>
+<td>str</td>
+<td></td>
+<td>Description of the purchase</td>
+</tr>
+<tr class="odd">
+<td>price</td>
+<td>int</td>
+<td></td>
+<td>Price in USD cents</td>
+</tr>
+<tr class="even">
+<td>payment_method</td>
+<td>str</td>
+<td>credit_card</td>
+<td>Payment method (credit_card, lightning, etc.)</td>
+</tr>
+<tr class="odd">
+<td>title</td>
+<td>str</td>
+<td>Purchase from URL</td>
+<td>Title of the purchase</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+<td><strong>payment status response</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-54" class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.amazon.com/Matter-Culture-Iain-M-Banks/dp/0316005371"</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_link(url, <span class="st">"Matter (Culture)"</span>, <span class="dv">629</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>r.status_code, r.text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ '{"id": "cee2ded1-37c8-4832-b6f9-0be5d29e599b", "created_at": "2025-06-07T07:46:42.209Z", "status": "pending", "payment_method": "credit_card"}')</code></pre>
+</div>
+</div>
+</section>
+<section id="payment-info" class="level3">
+<h3 class="anchored" data-anchor-id="payment-info">Payment Info</h3>
+<p>As a buyer, we can check the status of a payment as follows:</p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L351" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.payment_info" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.payment_info">Fewsats.payment_info</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.payment_info (pid:str)</code></pre>
+</blockquote>
+<p><em>Retrieve the details of a payment.</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pid</td>
+<td>str</td>
+<td>purchase id</td>
+</tr>
+</tbody>
+</table>
+<div id="cell-57" class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.payment_info(payment_response[<span class="st">'id'</span>])</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'id': '0d73aed1-6823-4eca-97d4-384fa9430b13',
+  'created_at': '2025-06-07T07:46:42.106Z',
+  'status': 'success',
+  'payment_request_url': '',
+  'payment_context_token': '6313116c-02e7-4631-adbf-60bdebfb3813',
+  'invoice': '',
+  'preimage': '',
+  'amount': 1,
+  'currency': 'usd',
+  'payment_method': 'lightning',
+  'title': 'Test Package',
+  'description': 'Test offer',
+  'type': 'one-off',
+  'is_test': False})</code></pre>
+</div>
+</div>
+</section>
+<section id="pay-x402-offer" class="level3">
+<h3 class="anchored" data-anchor-id="pay-x402-offer">Pay X402 Offer</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L358" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.pay_x402_offer" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.pay_x402_offer">Fewsats.pay_x402_offer</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.pay_x402_offer (payload:Dict[str,Any], chain:str='base')</code></pre>
+</blockquote>
+<p>*Creates a payment from an x402 offer and returns a payment header to access the resource.</p>
+<p>Args: payload: The x402 offer payload containing accepts, error, and x402Version chain: Blockchain chain to use (default: “base”)</p>
+<p>Returns: Dictionary containing payment_header to use for subsequent requests*</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>payload</td>
+<td>Dict</td>
+<td></td>
+<td>The x402 offer payload</td>
+</tr>
+<tr class="even">
+<td>chain</td>
+<td>str</td>
+<td>base</td>
+<td>Blockchain chain to use</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-60" class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>x402_offer <span class="op">=</span> {</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"accepts"</span>: [</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"scheme"</span>: <span class="st">"exact"</span>,</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"network"</span>: <span class="st">"base"</span>,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"maxAmountRequired"</span>: <span class="st">"1"</span>,</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"resource"</span>: <span class="st">"https://proxy402.com/L27XYy_NCU"</span>,</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"description"</span>: <span class="st">"Payment for GET https://proxy402.com/L27XYy_NCU"</span>,</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"mimeType"</span>: <span class="st">""</span>,</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"payTo"</span>: <span class="st">"0xddb24Bd8A6Cb0f2d3eaBF7a828C0b4364668B963"</span>,</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"maxTimeoutSeconds"</span>: <span class="dv">300</span>,</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"asset"</span>: <span class="st">"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"</span>,</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"extra"</span>: {</span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"name"</span>: <span class="st">"USD Coin"</span>,</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"version"</span>: <span class="st">"2"</span></span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>  ],</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"error"</span>: <span class="st">"X-PAYMENT header is required"</span>,</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x402Version"</span>: <span class="dv">1</span></span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_x402_offer(x402_offer, chain<span class="op">=</span><span class="st">"base"</span>)</span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(200,
+ {'payment_header': 'eyJ4NDAyVmVyc2lvbiI6IDEsICJzY2hlbWUiOiAiZXhhY3QiLCAibmV0d29yayI6ICJiYXNlIiwgInBheWxvYWQiOiB7InNpZ25hdHVyZSI6ICIweDM3OGUxNmI4YzA2NDU5NmZiYmIwYTNkNDBjYzIzZDQ4ZjQ3YWI4ZjY1YjM4NDkwMzE1NmNjZDQ3NWM5YWEwNWQwOTMyNTgzNGFkNzcwNTEzMDM2Yjg0MDQ4ZmQ0NjE0ZWU3MTFmYTcyNGE0YjE1Yzk3MzlmNzUzNTc5NGNmNGQ1MWIiLCAiYXV0aG9yaXphdGlvbiI6IHsiZnJvbSI6ICIweDJGQjI3Yzg0Njk5MkNjODk1MDlENzQzNDhGOEQ2YmVjM2VkNmE3NDAiLCAidG8iOiAiMHhkZGIyNEJkOEE2Q2IwZjJkM2VhQkY3YTgyOEMwYjQzNjQ2NjhCOTYzIiwgInZhbHVlIjogIjEiLCAidmFsaWRBZnRlciI6ICIxNzQ5MjgyMzQzIiwgInZhbGlkQmVmb3JlIjogIjE3NDkyODI3MDMiLCAibm9uY2UiOiAiMHgxNDU4MmFkMzg4MmU3ZjY2MzJiOTE5NzY1MjQ1YjkwNmYyMmVkOWRmZTRjOGYxOWNlY2IyOTM5ODJiZGM5OGViIn19fQ=='})</code></pre>
+</div>
+</div>
+<div id="cell-61" class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>httpx.get(x402_offer[<span class="st">"accepts"</span>][<span class="dv">0</span>][<span class="st">"resource"</span>], headers<span class="op">=</span>{<span class="st">"X-PAYMENT"</span>: r.json()[<span class="st">"payment_header"</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Response [402 Payment Required]&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="pay-x402-link" class="level3">
+<h3 class="anchored" data-anchor-id="pay-x402-link">Pay X402 Link</h3>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L379" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="fewsats.pay_x402_link" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.pay_x402_link">Fewsats.pay_x402_link</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.pay_x402_link (url:str, method:str='GET',
+                        body:Dict[str,Any]=None,
+                        headers:Dict[str,str]=None, chain:str='base')</code></pre>
+</blockquote>
+<p>*Creates a purchase from an external URL that requires x402 payment.</p>
+<p>Args: url: The URL to purchase from method: HTTP method to use (default: “GET”) body: Optional request body headers: Optional request headers chain: Blockchain chain to use (default: “base”)</p>
+<p>Returns: The response from the target URL after successful payment*</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>url</td>
+<td>str</td>
+<td></td>
+<td>URL to purchase from</td>
+</tr>
+<tr class="even">
+<td>method</td>
+<td>str</td>
+<td>GET</td>
+<td>HTTP method to use</td>
+</tr>
+<tr class="odd">
+<td>body</td>
+<td>Dict</td>
+<td>None</td>
+<td>Optional request body</td>
+</tr>
+<tr class="even">
+<td>headers</td>
+<td>Dict</td>
+<td>None</td>
+<td>Optional request headers</td>
+</tr>
+<tr class="odd">
+<td>chain</td>
+<td>str</td>
+<td>base</td>
+<td>Blockchain chain to use</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-64" class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>x402_link <span class="op">=</span> <span class="st">"https://proxy402.com/KQzW9kfi3Z"</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> fs.pay_x402_link(x402_link, chain<span class="op">=</span><span class="st">"base-sepolia"</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>r.status_code, r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(400,
+ {'detail': '{"accepts":[{"scheme":"exact","network":"base-sepolia","maxAmountRequired":"1","resource":"https://proxy402.com/KQzW9kfi3Z","description":"Payment for GET https://proxy402.com/KQzW9kfi3Z","mimeType":"","payTo":"0xddb24Bd8A6Cb0f2d3eaBF7a828C0b4364668B963","maxTimeoutSeconds":300,"asset":"0x036CbD53842c5426634e7929541eC2318f3dCF7e","extra":{"name":"USDC","version":"2"}}],"error":"insufficient_funds","x402Version":1}'})</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="as-tools" class="level2">
+<h2 class="anchored" data-anchor-id="as-tools">As tools</h2>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L424" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="fewsats.as_tools" class="level3">
+<h3 class="anchored" data-anchor-id="fewsats.as_tools">Fewsats.as_tools</h3>
+<blockquote class="blockquote">
+<pre><code> Fewsats.as_tools ()</code></pre>
+</blockquote>
+<p><em>Return list of available tools for AI agents</em></p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L415" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="wrap_with_response" class="level3">
+<h3 class="anchored" data-anchor-id="wrap_with_response">wrap_with_response</h3>
+<blockquote class="blockquote">
+<pre><code> wrap_with_response (method)</code></pre>
+</blockquote>
+<p><em>Wraps a method to return (status_code, text) instead of a Response object</em></p>
+<hr>
+<p><a href="https://github.com/Fewsats/fewsats-python/blob/main/fewsats/core.py#L413" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_response" class="level3">
+<h3 class="anchored" data-anchor-id="get_response">get_response</h3>
+<blockquote class="blockquote">
+<pre><code> get_response (r)</code></pre>
+</blockquote>
+<div id="cell-69" class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>fs.as_tools()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[&lt;function __main__.Fewsats.me()&gt;,
+ &lt;function __main__.Fewsats.balance()&gt;,
+ &lt;function __main__.Fewsats.payment_methods() -&gt; List[Dict[str, Any]]&gt;,
+ &lt;function __main__.Fewsats.pay_offer_str(offer_id: str, l402_offer: str) -&gt; dict&gt;,
+ &lt;function __main__.Fewsats.payment_info(pid: str)&gt;]</code></pre>
+</div>
+</div>
+<p>Both the preview and purchase methods automatically use the default payment method if a charge is needed. This client provides a straightforward way to interact with the Fewsats API, making it easy for developers to integrate Fewsats functionality into their applications.</p>
+</section>
+</section>
+<section id="agent-demo" class="level2">
+<h2 class="anchored" data-anchor-id="agent-demo">Agent Demo</h2>
+<p>We will use <a href="https://claudette.answer.ai/">Claudette</a> to demonstrate how to pay for content using the Fewsats API.</p>
+<div id="cell-72" class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> claudette <span class="im">import</span> Chat, models</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-73" class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> models[<span class="dv">1</span>]</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'claude-3-5-sonnet-20240620'</code></pre>
+</div>
+</div>
+<div id="cell-74" class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>fs.balance().json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[{'id': 1, 'balance': 4391, 'currency': 'usd'}]</code></pre>
+</div>
+</div>
+<div id="cell-75" class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let's create a payable offer</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>test_offers <span class="op">=</span> [{</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"id"</span>: <span class="st">"test_offer_2"</span>,</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"amount"</span>: <span class="dv">1</span>,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"currency"</span>: <span class="st">"usd"</span> ,</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"description"</span>: <span class="st">"Test offer"</span>,</span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"title"</span>: <span class="st">"Test Package"</span>,</span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"payment_methods"</span>: [<span class="st">"lightning"</span>, <span class="st">"credit_card"</span>]</span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>}]</span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a>l402_offers <span class="op">=</span> fs.create_offers(test_offers).json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-76" class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>chat <span class="op">=</span> Chat(model, sp<span class="op">=</span><span class="st">'You are a helpful assistant that can pay offers.'</span>, tools<span class="op">=</span>fs.as_tools())</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>pr <span class="op">=</span> <span class="ss">f"Could you pay the cheapest offer in </span><span class="sc">{</span>l402_offers<span class="sc">}</span><span class="ss">?"</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> chat.toolloop(pr, trace_func<span class="op">=</span><span class="bu">print</span>)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Message(id='msg_01KdaFDdJZ9dfd31pvS8LAs9', content=[TextBlock(text="Certainly! I'll analyze the offer information you've provided and pay for the cheapest offer. In this case, there's only one offer available, so that will be the one we'll pay for. Let's proceed with the payment using the `pay_offer_str` function.", type='text'), ToolUseBlock(id='toolu_01Acq5XLUhLBEJNXALXxDUM6', input={'offer_id': 'test_offer_2', 'l402_offer': '{"offers": [{"id": "test_offer_2", "amount": 1, "currency": "usd", "description": "Test offer", "title": "Test Package", "payment_methods": ["lightning", "credit_card"], "type": "one-off"}], "payment_context_token": "584b71d6-b022-4309-8be6-809e2d7041df", "payment_request_url": "http://localhost:8000/v0/l402/payment-request", "version": "0.2.2", "requires_billing_information": false}'}, name='pay_offer_str', type='tool_use')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='tool_use', stop_sequence=None, type='message', usage=In: 1043; Out: 278; Cache create: 0; Cache read: 0; Total: 1321)
+Message(id='msg_01U7opTNJdzU3afvCgveygUg', content=[TextBlock(text="Great news! The payment for the offer has been successfully processed. Here's a summary of the transaction:\n\n1. Offer ID: test_offer_2\n2. Amount: 1 USD cent (0.01 USD)\n3. Title: Test Package\n4. Description: Test offer\n5. Payment ID: 0e22ebf3-951a-4d0f-b08a-f778950e21e0\n6. Payment Status: Success\n7. Payment Method: Lightning\n8. Transaction Date: June 7, 2025, at 07:46:51 UTC\n\nThe payment was completed successfully using the Lightning network. Is there anything else you would like to know about this transaction or any other assistance you need?", type='text')], model='claude-3-5-sonnet-20240620', role='assistant', stop_reason='end_turn', stop_sequence=None, type='message', usage=In: 1403; Out: 168; Cache create: 0; Cache read: 0; Total: 1571)</code></pre>
+</div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>Great news! The payment for the offer has been successfully processed. Here’s a summary of the transaction:</p>
+<ol type="1">
+<li>Offer ID: test_offer_2</li>
+<li>Amount: 1 USD cent (0.01 USD)</li>
+<li>Title: Test Package</li>
+<li>Description: Test offer</li>
+<li>Payment ID: 0e22ebf3-951a-4d0f-b08a-f778950e21e0</li>
+<li>Payment Status: Success</li>
+<li>Payment Method: Lightning</li>
+<li>Transaction Date: June 7, 2025, at 07:46:51 UTC</li>
+</ol>
+<p>The payment was completed successfully using the Lightning network. Is there anything else you would like to know about this transaction or any other assistance you need?</p>
+<details>
+<ul>
+<li>id: <code>msg_01U7opTNJdzU3afvCgveygUg</code></li>
+<li>content: <code>[{'text': "Great news! The payment for the offer has been successfully processed. Here's a summary of the transaction:\n\n1. Offer ID: test_offer_2\n2. Amount: 1 USD cent (0.01 USD)\n3. Title: Test Package\n4. Description: Test offer\n5. Payment ID: 0e22ebf3-951a-4d0f-b08a-f778950e21e0\n6. Payment Status: Success\n7. Payment Method: Lightning\n8. Transaction Date: June 7, 2025, at 07:46:51 UTC\n\nThe payment was completed successfully using the Lightning network. Is there anything else you would like to know about this transaction or any other assistance you need?", 'type': 'text'}]</code></li>
+<li>model: <code>claude-3-5-sonnet-20240620</code></li>
+<li>role: <code>assistant</code></li>
+<li>stop_reason: <code>end_turn</code></li>
+<li>stop_sequence: <code>None</code></li>
+<li>type: <code>message</code></li>
+<li>usage: <code>{'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 0, 'input_tokens': 1403, 'output_tokens': 168, 'service_tier': 'standard'}</code></li>
+</ul>
+</details>
+</div>
+</div>
+<div id="cell-77" class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>chat.h</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[{'role': 'user',
+  'content': [{'type': 'text',
+    'text': "Could you pay the cheapest offer in {'offers': [{'id': 'test_offer_2', 'amount': 1, 'currency': 'usd', 'description': 'Test offer', 'title': 'Test Package', 'payment_methods': ['lightning', 'credit_card'], 'type': 'one-off'}], 'payment_context_token': '584b71d6-b022-4309-8be6-809e2d7041df', 'payment_request_url': 'http://localhost:8000/v0/l402/payment-request', 'version': '0.2.2', 'requires_billing_information': False}?"}]},
+ {'role': 'assistant',
+  'content': [TextBlock(text="Certainly! I'll analyze the offer information you've provided and pay for the cheapest offer. In this case, there's only one offer available, so that will be the one we'll pay for. Let's proceed with the payment using the `pay_offer_str` function.", type='text'),
+   ToolUseBlock(id='toolu_01Acq5XLUhLBEJNXALXxDUM6', input={'offer_id': 'test_offer_2', 'l402_offer': '{"offers": [{"id": "test_offer_2", "amount": 1, "currency": "usd", "description": "Test offer", "title": "Test Package", "payment_methods": ["lightning", "credit_card"], "type": "one-off"}], "payment_context_token": "584b71d6-b022-4309-8be6-809e2d7041df", "payment_request_url": "http://localhost:8000/v0/l402/payment-request", "version": "0.2.2", "requires_billing_information": false}'}, name='pay_offer_str', type='tool_use')]},
+ {'role': 'user',
+  'content': [{'type': 'tool_result',
+    'tool_use_id': 'toolu_01Acq5XLUhLBEJNXALXxDUM6',
+    'content': '(200, \'{"id": "0e22ebf3-951a-4d0f-b08a-f778950e21e0", "created_at": "2025-06-07T07:46:51.819Z", "status": "success", "payment_method": "lightning"}\')'}]},
+ {'role': 'assistant',
+  'content': [TextBlock(text="Great news! The payment for the offer has been successfully processed. Here's a summary of the transaction:\n\n1. Offer ID: test_offer_2\n2. Amount: 1 USD cent (0.01 USD)\n3. Title: Test Package\n4. Description: Test offer\n5. Payment ID: 0e22ebf3-951a-4d0f-b08a-f778950e21e0\n6. Payment Status: Success\n7. Payment Method: Lightning\n8. Transaction Date: June 7, 2025, at 07:46:51 UTC\n\nThe payment was completed successfully using the Lightning network. Is there anything else you would like to know about this transaction or any other assistance you need?", type='text')]}]</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Fewsats\.github\.io\/fewsats-python");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Fewsats/fewsats-python/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
